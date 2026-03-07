@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INFO IPTV's</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: rgba(27, 32, 44, 0.92);
+      --text: #edf2ff;
+      --muted: #a9b4cc;
+      --accent: #5aa9ff;
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(90,169,255,0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(127,92,255,0.10), transparent 25%),
+        linear-gradient(180deg, #0b0e13 0%, #121722 100%);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px 12px;
+    }
+
+    .app-shell {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, rgba(90,169,255,0.10), rgba(127,92,255,0.10));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .hero-subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .hero-badge {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(90,169,255,0.30);
+      background: rgba(90,169,255,0.12);
+      color: #cfe6ff;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .grid-main {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .grid-bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #dce6ff;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    textarea.form-control,
+    input.form-control {
+      background: rgba(12, 16, 24, 0.85);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    textarea.form-control {
+      min-height: 260px;
+      resize: vertical;
+    }
+
+    textarea.form-control:focus,
+    input.form-control:focus {
+      background: rgba(18, 24, 34, 0.95);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.18rem rgba(90, 169, 255, 0.18);
+    }
+
+    .toolbar,
+    .generated-actions,
+    .info-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #3b82f6);
+      border: none;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border: none;
+    }
+
+    .btn-outline-light {
+      border-color: rgba(255,255,255,0.18);
+      color: #eef4ff;
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-color: rgba(255,255,255,0.24);
+    }
+
+    .btn-mini {
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.2;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .stat-box {
+      background: linear-gradient(180deg, rgba(25,30,42,0.98), rgba(18,22,31,0.98));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .progress {
+      height: 20px;
+      background: rgba(5, 8, 14, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      font-weight: 700;
+    }
+
+    .status-text {
+      color: var(--muted);
+      margin-bottom: 14px;
+      min-height: 24px;
+      white-space: pre-wrap;
+    }
+
+    .badge-ok,
+    .badge-bad,
+    .badge-mid,
+    .badge-err {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      min-width: 84px;
+    }
+
+    .badge-ok {
+      background: rgba(34, 197, 94, 0.14);
+      color: #9ef0b8;
+      border: 1px solid rgba(34, 197, 94, 0.30);
+    }
+
+    .badge-bad {
+      background: rgba(239, 68, 68, 0.14);
+      color: #ffb4b4;
+      border: 1px solid rgba(239, 68, 68, 0.30);
+    }
+
+    .badge-mid {
+      background: rgba(245, 158, 11, 0.14);
+      color: #ffe09f;
+      border: 1px solid rgba(245, 158, 11, 0.30);
+    }
+
+    .badge-err {
+      background: rgba(148, 163, 184, 0.15);
+      color: #d6dfec;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .table-wrap {
+      margin-top: 6px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table.dataTable {
+      color: white !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      width: 100% !important;
+    }
+
+    #sortTable {
+      min-width: 1100px;
+    }
+
+    .table {
+      background: rgba(17, 21, 30, 0.96);
+    }
+
+    table.dataTable thead th {
+      background: linear-gradient(180deg, #edf3ff, #dbe6ff);
+      color: #101828;
+      border-bottom: 0 !important;
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .table td,
+    .table th {
+      vertical-align: middle !important;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .table-bordered td,
+    .table-bordered th {
+      border-color: rgba(255,255,255,0.06) !important;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(255,255,255,0.02);
+    }
+
+    .table-striped tbody tr:hover {
+      background-color: rgba(90,169,255,0.06);
+    }
+
+    .log-box,
+    .categories-box {
+      background: rgba(9, 12, 18, 0.85);
+      color: #d9e4f7;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .log-box {
+      max-height: 240px;
+      overflow: auto;
+      display: none;
+    }
+
+    .log-box.show {
+      display: block;
+    }
+
+    .categories-box {
+      display: none;
+      margin-top: 8px;
+      white-space: normal;
+    }
+
+    .categories-box.show {
+      display: block;
+    }
+
+    #generatedGetUrl {
+      min-height: 120px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
+    .info-hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+      display: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+      color: #d9e4f7 !important;
+    }
+
+    .mobile-results {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .result-card {
+      background: rgba(14, 18, 26, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .result-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .result-card-host {
+      font-weight: 700;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+
+    .result-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .result-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 8px;
+    }
+
+    .result-item-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-bottom: 4px;
+    }
+
+    .result-item-value {
+      font-size: 0.88rem;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .result-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px 8px;
+      }
+
+      .app-shell {
+        max-width: 100%;
+      }
+
+      .hero {
+        padding: 12px 14px;
+        margin-bottom: 12px;
+        border-radius: 14px;
+      }
+
+      .hero-title {
+        font-size: 1.2rem;
+        line-height: 1.2;
+      }
+
+      .hero-subtitle {
+        font-size: 0.82rem;
+        margin-top: 4px;
+      }
+
+      .hero-badge {
+        font-size: 0.72rem;
+        padding: 6px 10px;
+      }
+
+      .app-card {
+        padding: 10px;
+        border-radius: 14px;
+      }
+
+      .grid-main,
+      .grid-bottom {
+        display: block;
+      }
+
+      .panel {
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+
+      .section-title {
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+      }
+
+      label {
+        font-size: 0.82rem;
+        margin-bottom: 6px;
+      }
+
+      textarea.form-control {
+        min-height: 140px;
+        font-size: 0.9rem;
+      }
+
+      #generatedGetUrl {
+        min-height: 90px;
+      }
+
+      .toolbar,
+      .generated-actions,
+      .info-bar {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .toolbar .btn,
+      .generated-actions .btn,
+      .info-bar .btn {
+        width: 100%;
+        min-height: 40px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 12px 0;
+      }
+
+      .stat-box {
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
+      }
+
+      .stat-value {
+        font-size: 1.1rem;
+      }
+
+      .progress {
+        height: 14px;
+        margin-bottom: 8px;
+      }
+
+      .status-text {
+        font-size: 0.82rem;
+        min-height: auto;
+      }
+
+      .log-box,
+      .categories-box {
+        font-size: 0.82rem;
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .table-wrap {
+        display: none;
+      }
+
+      .mobile-results {
+        display: block;
+      }
+
+      .result-card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="hero">
+      <div>
+        <h1 class="hero-title">INFO IPTV's</h1>
+        <div class="hero-subtitle">Panel Venom</div>
+      </div>
+      <div class="hero-badge">V E N O M</div>
+    </div>
+
+    <div class="app-card">
+      <div class="grid-main">
+        <div class="panel">
+          <div class="section-title">Entrada de contenido</div>
+
+          <textarea id="contenido" class="form-control" placeholder="Pega aquí texto, HTML, listas M3U o enlaces IPTV..."></textarea>
+
+          <div class="toolbar">
+            <button class="btn btn-danger" id="btnClear" onclick="forceClearAll()">Borrar</button>
+            <button class="btn btn-outline-light" id="btnGenerateGet">Generar get.php</button>
+            <button class="btn btn-primary" id="btnRun">Obtener info</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat-box">
+              <span class="stat-label">URLs detectadas</span>
+              <span class="stat-value" id="statDetected">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Procesadas OK</span>
+              <span class="stat-value" id="statOk">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Errores</span>
+              <span class="stat-value" id="statError">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Resultados</span>
+              <span class="stat-value" id="statRows">0</span>
+            </div>
+          </div>
+
+          <div class="progress">
+            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 0%">0%</div>
+          </div>
+
+          <div class="status-text" id="indicator">Esperando acción...</div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">URL get.php</div>
+
+
+          <textarea
+            id="generatedGetUrl"
+            class="form-control"
+            placeholder="Aquí aparecerá la URL get.php generada..."
+          ></textarea>
+
+          <div class="generated-actions">
+            <button class="btn btn-outline-light" id="btnSaveTxt">Guardar .txt</button>
+            <button class="btn btn-outline-light" id="btnClearGenerated">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-bottom">
+        <div class="panel">
+          <div class="section-title">Resultados</div>
+
+          <div class="info-bar">
+            <button class="btn btn-sm btn-outline-light" id="btnToggleLogs">+ Info</button>
+            <span class="info-hint">Despliega información técnica solo si quieres revisar detalles.</span>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table table-striped table-bordered mb-0" id="sortTable" width="100%">
+              <thead>
+                <tr>
+                  <th>Estado</th>
+                  <th>Host</th>
+                  <th>Usuario</th>
+                  <th>Caduca</th>
+                  <th>Máx. Conexiones</th>
+                  <th>Activas</th>
+                  <th>Libres</th>
+                  <th>Live Cat</th>
+                  <th>VOD Cat</th>
+                  <th>Series Cat</th>
+                  <th>Canales</th>
+                  <th>Ver</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="mobile-results" id="mobileResults"></div>
+
+          <div class="log-box" id="logBox">Logs:
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const REQUEST_TIMEOUT = 12000;
+    const PLAYLIST_TYPE = "m3u_plus";
+    const PLAYLIST_OUTPUT = "ts";
+
+    let tableInstance = null;
+    let selectedGeneratedUrl = "";
+    let selectedMeta = null;
+    let logsExpanded = false;
+
+    const el = {
+      contenido: document.getElementById("contenido"),
+      indicator: document.getElementById("indicator"),
+      progressBar: document.getElementById("progressBar"),
+      statDetected: document.getElementById("statDetected"),
+      statOk: document.getElementById("statOk"),
+      statError: document.getElementById("statError"),
+      statRows: document.getElementById("statRows"),
+      btnRun: document.getElementById("btnRun"),
+      btnGenerateGet: document.getElementById("btnGenerateGet"),
+      btnClear: document.getElementById("btnClear"),
+      logBox: document.getElementById("logBox"),
+      btnToggleLogs: document.getElementById("btnToggleLogs"),
+      generatedGetUrl: document.getElementById("generatedGetUrl"),
+      btnSaveTxt: document.getElementById("btnSaveTxt"),
+      btnClearGenerated: document.getElementById("btnClearGenerated"),
+      mobileResults: document.getElementById("mobileResults")
+    };
+
+    function log(message) {
+      const line = `[${new Date().toLocaleTimeString("es-ES")}] ${message}`;
+      console.log(line);
+      el.logBox.textContent += line + "\n";
+      el.logBox.scrollTop = el.logBox.scrollHeight;
+    }
+
+    function toggleLogs(forceOpen = null) {
+      if (typeof forceOpen === "boolean") {
+        logsExpanded = forceOpen;
+      } else {
+        logsExpanded = !logsExpanded;
+      }
+      el.logBox.classList.toggle("show", logsExpanded);
+      el.btnToggleLogs.textContent = logsExpanded ? "- Info" : "+ Info";
+    }
+
+    function createTable() {
+      tableInstance = $("#sortTable").DataTable({
+        pageLength: 9999,
+        paging: false,
+        searching: false,
+        info: true,
+        lengthChange: false,
+        order: [[1, "asc"]],
+        language: {
+          info: "Mostrando _TOTAL_ registros",
+          zeroRecords: "No se encontraron resultados",
+          infoEmpty: "Sin registros",
+          infoFiltered: ""
+        }
+      });
+    }
+
+    function destroyTable() {
+      try {
+        if ($.fn.DataTable.isDataTable("#sortTable")) {
+          const dt = $("#sortTable").DataTable();
+          dt.clear();
+          dt.destroy();
+        }
+      } catch (e) {
+        console.warn("No se pudo destruir DataTable:", e);
+      }
+      tableInstance = null;
+    }
+
+    function updateRowCount() {
+      const desktopRows = document.querySelectorAll("#sortTable tbody tr.main-row").length;
+      const mobileRows = document.querySelectorAll("#mobileResults .result-card").length;
+      el.statRows.textContent = Math.max(desktopRows, mobileRows);
+    }
+
+    function setStatus(message) {
+      el.indicator.textContent = message;
+    }
+
+    function setProgress(current, total) {
+      const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+      el.progressBar.style.width = percent + "%";
+      el.progressBar.textContent = percent + "%";
+    }
+
+    function setProgressDone() {
+      el.progressBar.style.width = "100%";
+      el.progressBar.textContent = "Listo";
+    }
+
+    function resetProgress() {
+      el.progressBar.style.width = "0%";
+      el.progressBar.textContent = "0%";
+    }
+
+    function saveInput() {
+      localStorage.setItem("iptv_input_cache", el.contenido.value);
+    }
+
+    function loadInput() {
+      const saved = localStorage.getItem("iptv_input_cache");
+      if (saved) el.contenido.value = saved;
+    }
+
+    function extractUrls(text) {
+      if (!text || !text.trim()) return [];
+
+      const regex = /https?:\/\/[^\s"'<>]+/gi;
+      const matches = text.match(regex) || [];
+
+      const unique = new Set();
+      const valid = [];
+
+      for (const raw of matches) {
+        try {
+          const clean = raw.trim().replace(/[)\],;]+$/, "");
+          const url = new URL(clean);
+
+          let username = url.searchParams.get("username");
+          let password = url.searchParams.get("password");
+
+          if (!username || !password) {
+            const parts = url.pathname.split("/").filter(Boolean);
+
+            if (parts.length >= 3) {
+              const type = parts[0].toLowerCase();
+
+              if (["live", "movie", "series"].includes(type) && parts.length >= 4) {
+                username = parts[1];
+                password = parts[2];
+              } else {
+                username = parts[0];
+                password = parts[1];
+              }
+            }
+          }
+
+          if (!username || !password) {
+            log(`Saltada URL sin credenciales detectables: ${clean}`);
+            continue;
+          }
+
+          const dedupeKey = `${url.hostname}:${url.port || ""}|${username}|${password}`;
+
+          if (!unique.has(dedupeKey)) {
+            unique.add(dedupeKey);
+            valid.push(url.toString());
+          }
+        } catch (e) {
+          log(`URL inválida: ${raw}`);
+        }
+      }
+
+      return valid;
+    }
+
+    function buildApiConfig(inputUrl) {
+      const url = new URL(inputUrl);
+
+      const protocol = url.protocol === "https:" ? "https:" : "http:";
+      const port = url.port || (protocol === "https:" ? "443" : "80");
+
+      let username = url.searchParams.get("username");
+      let password = url.searchParams.get("password");
+
+      if (!username || !password) {
+        const parts = url.pathname.split("/").filter(Boolean);
+
+        if (parts.length >= 3) {
+          if (["live", "movie", "series"].includes(parts[0].toLowerCase()) && parts.length >= 4) {
+            username = parts[1];
+            password = parts[2];
+          } else {
+            username = parts[0];
+            password = parts[1];
+          }
+        }
+      }
+
+      if (!username || !password) {
+        throw new Error("No se pudieron extraer username/password");
+      }
+
+      const apiBase = `${protocol}//${url.hostname}:${port}/`;
+      const playerApiUrl =
+        `${apiBase}player_api.php?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+
+      const getUrl =
+        `${apiBase}get.php?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&type=${PLAYLIST_TYPE}&output=${PLAYLIST_OUTPUT}`;
+
+      return {
+        host: url.hostname,
+        port,
+        username,
+        password,
+        apiBase,
+        playerApiUrl,
+        getUrl
+      };
+    }
+
+    function formatUnixDate(unixValue) {
+      const n = Number(unixValue);
+      if (!n) return "N/D";
+
+      return new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }).format(new Date(n * 1000));
+    }
+
+    function getAccountState(expDate) {
+      const exp = Number(expDate);
+      if (!exp) return "Desconocido";
+      const now = Math.floor(Date.now() / 1000);
+      return exp < now ? "Caducada" : "Activa";
+    }
+
+    function sanitizeText(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m]));
+    }
+
+    function sanitizeFilenamePart(value) {
+      return String(value || "sin_datos")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9._-]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 60) || "sin_datos";
+    }
+
+    function saveTextAsTxt(text, filename = "get_url.txt") {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function saveGeneratedTxt() {
+      const value = el.generatedGetUrl.value.trim();
+      if (!value) {
+        setStatus("No hay URL cargada para guardar.");
+        return;
+      }
+
+      let hostPart = "host";
+      let userPart = "usuario";
+
+      try {
+        const u = new URL(value);
+        hostPart = sanitizeFilenamePart(u.hostname || "host");
+        userPart = sanitizeFilenamePart(u.searchParams.get("username") || selectedMeta?.username || "usuario");
+      } catch {
+        hostPart = sanitizeFilenamePart(selectedMeta?.host || "host");
+        userPart = sanitizeFilenamePart(selectedMeta?.username || "usuario");
+      }
+
+      const fileName = `${hostPart}_${userPart}.txt`;
+      saveTextAsTxt(value, fileName);
+      setStatus(`Archivo .txt guardado: ${fileName}`);
+    }
+
+    function generateGetFromInput() {
+      const rawText = el.contenido.value.trim();
+
+      if (!rawText) {
+        setStatus("Pega una URL IPTV antes de generar get.php.");
+        return;
+      }
+
+      const urls = extractUrls(rawText);
+
+      if (!urls.length) {
+        setStatus("No se encontró una URL válida con username y password.");
+        return;
+      }
+
+      try {
+        const cfg = buildApiConfig(urls[0]);
+
+        selectedGeneratedUrl = cfg.getUrl;
+        selectedMeta = {
+          host: cfg.host,
+          username: cfg.username,
+          state: "Manual"
+        };
+
+        el.generatedGetUrl.value = cfg.getUrl;
+        setStatus("URL get.php generada correctamente.");
+      } catch (e) {
+        setStatus("No se pudo generar la URL get.php.");
+      }
+    }
+
+    function clearGeneratedUrl() {
+      selectedGeneratedUrl = "";
+      selectedMeta = null;
+      el.generatedGetUrl.value = "";
+    }
+
+    function toggleCategories(rowId) {
+      const box = document.getElementById(`catbox-${rowId}`);
+      const btn = document.getElementById(`catbtn-${rowId}`);
+      if (!box || !btn) return;
+
+      const isOpen = box.classList.contains("show");
+      box.classList.toggle("show", !isOpen);
+      btn.textContent = isOpen ? "+" : "-";
+    }
+
+    function toggleMobileCategories(rowId) {
+      const box = document.getElementById(`mcatbox-${rowId}`);
+      const btn = document.getElementById(`mcatbtn-${rowId}`);
+      if (!box || !btn) return;
+
+      const isOpen = box.classList.contains("show");
+      box.classList.toggle("show", !isOpen);
+      btn.textContent = isOpen ? "Ver categorías" : "Ocultar categorías";
+    }
+
+    function addDesktopRow(result, rowId) {
+      let stateBadge = '<span class="badge-err">Error</span>';
+
+      if (result.state === "Activa") {
+        stateBadge = '<span class="badge-ok">Activa</span>';
+      } else if (result.state === "Caducada") {
+        stateBadge = '<span class="badge-bad">Caducada</span>';
+      } else if (result.state === "Desconocido") {
+        stateBadge = '<span class="badge-mid">Desconocido</span>';
+      }
+
+      const categoriesHtml = result.categories.length
+        ? result.categories.map(c => `• ${sanitizeText(c)}`).join("<br>")
+        : "Sin categorías disponibles.";
+
+      const html = `
+        <tr class="main-row">
+          <td>${stateBadge}</td>
+          <td>${sanitizeText(result.host)}</td>
+          <td>${sanitizeText(result.username)}</td>
+          <td>${sanitizeText(result.expiration)}</td>
+          <td>${sanitizeText(result.maxConnections)}</td>
+          <td>${sanitizeText(result.activeConnections)}</td>
+          <td>${sanitizeText(result.freeConnections)}</td>
+          <td>${sanitizeText(result.liveCategories)}</td>
+          <td>${sanitizeText(result.vodCategories)}</td>
+          <td>${sanitizeText(result.seriesCategories)}</td>
+          <td>${sanitizeText(result.liveStreams)}</td>
+          <td>
+            <button
+              id="catbtn-${rowId}"
+              class="btn btn-sm btn-outline-light btn-mini"
+              onclick="toggleCategories('${rowId}')">+</button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="12" style="padding: 0; border-top: 0; white-space: normal;">
+            <div class="categories-box" id="catbox-${rowId}">
+              <div style="margin-bottom:10px;"><strong>Categorías LIVE:</strong></div>
+              <div style="margin-bottom:12px;">${categoriesHtml}</div>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      document.querySelector("#sortTable tbody").insertAdjacentHTML("beforeend", html);
+    }
+
+    function addMobileCard(result, rowId) {
+      let stateBadge = '<span class="badge-err">Error</span>';
+
+      if (result.state === "Activa") {
+        stateBadge = '<span class="badge-ok">Activa</span>';
+      } else if (result.state === "Caducada") {
+        stateBadge = '<span class="badge-bad">Caducada</span>';
+      } else if (result.state === "Desconocido") {
+        stateBadge = '<span class="badge-mid">Desconocido</span>';
+      }
+
+      const categoriesHtml = result.categories.length
+        ? result.categories.map(c => `• ${sanitizeText(c)}`).join("<br>")
+        : "Sin categorías disponibles.";
+
+      const html = `
+        <div class="result-card">
+          <div class="result-card-top">
+            <div class="result-card-host">${sanitizeText(result.host)}</div>
+            <div>${stateBadge}</div>
+          </div>
+
+          <div class="result-card-grid">
+            <div class="result-item">
+              <span class="result-item-label">Usuario</span>
+              <span class="result-item-value">${sanitizeText(result.username)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Caduca</span>
+              <span class="result-item-value">${sanitizeText(result.expiration)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Máx. conexiones</span>
+              <span class="result-item-value">${sanitizeText(result.maxConnections)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Activas</span>
+              <span class="result-item-value">${sanitizeText(result.activeConnections)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Libres</span>
+              <span class="result-item-value">${sanitizeText(result.freeConnections)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Live Cat</span>
+              <span class="result-item-value">${sanitizeText(result.liveCategories)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">VOD Cat</span>
+              <span class="result-item-value">${sanitizeText(result.vodCategories)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Series Cat</span>
+              <span class="result-item-value">${sanitizeText(result.seriesCategories)}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Canales</span>
+              <span class="result-item-value">${sanitizeText(result.liveStreams)}</span>
+            </div>
+          </div>
+
+          <div class="result-card-actions">
+            <button
+              id="mcatbtn-${rowId}"
+              class="btn btn-sm btn-outline-light"
+              onclick="toggleMobileCategories('${rowId}')">Ver categorías</button>
+
+            <div class="categories-box" id="mcatbox-${rowId}">
+              <div style="margin-bottom:10px;"><strong>Categorías LIVE:</strong></div>
+              <div style="margin-bottom:12px;">${categoriesHtml}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      el.mobileResults.insertAdjacentHTML("beforeend", html);
+    }
+
+    function addRow(result, rowId) {
+      addDesktopRow(result, rowId);
+      addMobileCard(result, rowId);
+      updateRowCount();
+    }
+
+    function normalizeAxiosError(err) {
+      if (err instanceof Error && err.message) return err.message;
+      if (err?.response?.status) return `HTTP ${err.response.status}`;
+      if (err?.request && !err?.response) return "Sin respuesta del servidor / timeout / bloqueo";
+      if (err?.code) return `${err.code} - ${err.message || "Error de red"}`;
+      if (err?.message) return err.message;
+      return "Error desconocido";
+    }
+
+    async function fetchAccountData(inputUrl) {
+      const headers = { "User-Agent": "Mozilla/5.0" };
+      const cfg = buildApiConfig(inputUrl);
+
+      log(`Probando player API: ${cfg.playerApiUrl}`);
+
+      let infoResponse;
+      let liveCategoriesResponse;
+      let vodResponse;
+      let seriesResponse;
+      let streamsResponse;
+
+      try {
+        infoResponse = await axios.get(cfg.playerApiUrl, {
+          headers,
+          timeout: REQUEST_TIMEOUT,
+          validateStatus: () => true
+        });
+      } catch (err) {
+        throw new Error(`Sin respuesta al consultar player_api.php: ${err.message}`);
+      }
+
+      if (infoResponse.status === 404) throw new Error("HTTP 404 - player_api.php no existe en esa ruta");
+      if (infoResponse.status === 403) throw new Error("HTTP 403 - acceso denegado");
+      if (infoResponse.status >= 400) throw new Error(`HTTP ${infoResponse.status} en player_api.php`);
+
+      try {
+        liveCategoriesResponse = await axios.get(
+          `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_categories`,
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+        );
+
+        vodResponse = await axios.get(
+          `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_vod_categories`,
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+        );
+
+        seriesResponse = await axios.get(
+          `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_series_categories`,
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+        );
+
+        streamsResponse = await axios.get(
+          `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_streams`,
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+        );
+      } catch (err) {
+        throw new Error(`Error al consultar categorías/streams: ${err.message}`);
+      }
+
+      const info = infoResponse.data || {};
+      const liveCategoriesRaw = Array.isArray(liveCategoriesResponse.data) ? liveCategoriesResponse.data : [];
+      const vodCategoriesRaw = Array.isArray(vodResponse.data) ? vodResponse.data : [];
+      const seriesCategoriesRaw = Array.isArray(seriesResponse.data) ? seriesResponse.data : [];
+      const streamsRaw = Array.isArray(streamsResponse.data) ? streamsResponse.data : [];
+
+      const serverInfo = info.server_info || {};
+      const userInfo = info.user_info || {};
+
+      if (!userInfo || Object.keys(userInfo).length === 0) {
+        throw new Error("Respuesta no compatible con panel Xtream");
+      }
+
+      const host = `${serverInfo.url || new URL(inputUrl).hostname}:${serverInfo.port || new URL(inputUrl).port || "80"}`;
+      const username = userInfo.username || cfg.username;
+      const expDate = userInfo.exp_date || null;
+      const state = getAccountState(expDate);
+      const maxConnections = Number(userInfo.max_connections || 0);
+      const activeConnections = Number(userInfo.active_cons || 0);
+      const freeConnections = Math.max(0, maxConnections - activeConnections);
+
+      const liveCategories = liveCategoriesRaw
+        .map(c => String(c.category_name || "").trim())
+        .filter(Boolean);
+
+      return {
+        state,
+        host,
+        username,
+        expiration: formatUnixDate(expDate),
+        maxConnections,
+        activeConnections,
+        freeConnections,
+        liveCategories: liveCategories.length,
+        vodCategories: vodCategoriesRaw.length,
+        seriesCategories: seriesCategoriesRaw.length,
+        liveStreams: streamsRaw.length,
+        categories: liveCategories,
+        rawLink: cfg.getUrl
+      };
+    }
+
+    function forceClearAll() {
+      try {
+        if ($.fn.DataTable.isDataTable("#sortTable")) {
+          const dt = $("#sortTable").DataTable();
+          dt.clear();
+          dt.destroy();
+        }
+      } catch (e) {
+        console.warn("No se pudo destruir DataTable:", e);
+      }
+
+      const tbody = document.querySelector("#sortTable tbody");
+      if (tbody) tbody.innerHTML = "";
+      el.mobileResults.innerHTML = "";
+
+      selectedGeneratedUrl = "";
+      selectedMeta = null;
+      tableInstance = null;
+
+      el.contenido.value = "";
+      el.generatedGetUrl.value = "";
+      el.statDetected.textContent = "0";
+      el.statOk.textContent = "0";
+      el.statError.textContent = "0";
+      el.statRows.textContent = "0";
+      el.indicator.textContent = "Esperando acción...";
+      el.logBox.textContent = "Logs:\n";
+      resetProgress();
+
+      localStorage.removeItem("iptv_input_cache");
+
+      el.logBox.classList.remove("show");
+      el.btnToggleLogs.textContent = "+ Info";
+      logsExpanded = false;
+
+      createTable();
+    }
+
+    async function runExtraction() {
+      saveInput();
+
+      destroyTable();
+      document.querySelector("#sortTable tbody").innerHTML = "";
+      el.mobileResults.innerHTML = "";
+      clearGeneratedUrl();
+      toggleLogs(false);
+      el.logBox.textContent = "Logs:\n";
+      el.statRows.textContent = "0";
+
+      const rawText = el.contenido.value.trim();
+      if (!rawText) {
+        setStatus("Pega contenido antes de ejecutar.");
+        resetProgress();
+        createTable();
+        return;
+      }
+
+      const urls = extractUrls(rawText);
+      el.statDetected.textContent = urls.length;
+      el.statOk.textContent = "0";
+      el.statError.textContent = "0";
+
+      log(`URLs detectadas: ${urls.length}`);
+
+      if (!urls.length) {
+        setStatus("No se detectaron URLs válidas con username y password.");
+        resetProgress();
+        createTable();
+        return;
+      }
+
+      let ok = 0;
+      let error = 0;
+
+      setStatus("Procesando enlaces...");
+      setProgress(0, urls.length);
+
+      for (let i = 0; i < urls.length; i++) {
+        const current = urls[i];
+        const rowId = `row-${i + 1}`;
+        log(`Procesando ${i + 1}/${urls.length}: ${current}`);
+
+        try {
+          const result = await fetchAccountData(current);
+          addRow(result, rowId);
+          ok++;
+          log(`OK: ${result.host} | ${result.username}`);
+        } catch (err) {
+          const errorText = normalizeAxiosError(err);
+          console.error("ERROR:", current, err);
+          log(`ERROR: ${current} -> ${errorText}`);
+          error++;
+        }
+
+        el.statOk.textContent = ok;
+        el.statError.textContent = error;
+        setProgress(i + 1, urls.length);
+        setStatus(`Procesando ${i + 1} de ${urls.length}...`);
+      }
+
+      if (error > 0) {
+        toggleLogs(true);
+      }
+
+      createTable();
+      updateRowCount();
+      setProgressDone();
+      setStatus(`Proceso finalizado. OK: ${ok} | Errores: ${error}`);
+      log(`Finalizado. OK=${ok}, Errores=${error}`);
+    }
+
+    el.btnRun.addEventListener("click", runExtraction);
+    el.btnGenerateGet.addEventListener("click", generateGetFromInput);
+    el.contenido.addEventListener("input", saveInput);
+
+    el.btnSaveTxt.addEventListener("click", saveGeneratedTxt);
+    el.btnClearGenerated.addEventListener("click", () => {
+      clearGeneratedUrl();
+      setStatus("URL generada limpiada.");
+    });
+    el.btnToggleLogs.addEventListener("click", () => toggleLogs());
+
+    loadInput();
+    createTable();
+
+    window.toggleCategories = toggleCategories;
+    window.toggleMobileCategories = toggleMobileCategories;
+    window.forceClearAll = forceClearAll;
+  </script>
+</body>
+</html>
