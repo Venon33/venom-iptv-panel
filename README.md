@@ -1,44 +1,44 @@
-
 # Venom IPTV Panel
 
-Panel web informativo para analizar enlaces IPTV basados en paneles Xtream.
+A lightweight web panel to analyze IPTV links based on Xtream API servers.
 
-## Funciones
+## Features
 
-* Conversión automática de enlaces IPTV a `get.php`
-* Detección de usuario y contraseña desde URLs IPTV
-* Consulta de `player_api.php`
-* Información del panel:
+* Automatic conversion of IPTV links to `get.php`
+* Extracts **username and password** from IPTV URLs
+* Queries `player_api.php`
+* Displays server information:
 
-  * Estado de la cuenta
-  * Fecha de expiración
-  * Conexiones activas
-  * Conexiones disponibles
-  * Categorías LIVE / VOD / SERIES
-  * Número de canales disponibles
-* Interfaz optimizada para **móvil y escritorio**
-* Panel oscuro y ligero (HTML + JS puro)
+  * Account status
+  * Expiration date
+  * Active connections
+  * Available connections
+  * LIVE / VOD / SERIES categories
+  * Total number of channels
+* Optimized interface for **desktop and mobile**
+* Clean dark UI
+* Pure **HTML + JavaScript** (no backend required)
 
-## Uso
+## Usage
 
-1. Pegar un enlace IPTV en el campo de entrada.
+1. Paste an IPTV link into the input field.
 
-Ejemplo:
+Example:
 
 ```
-http://example.com:8080/live/usuario/password/12345.ts
+http://example.com:8080/live/user/password/12345.ts
 ```
 
-2. Pulsar **Generar get.php** o **Obtener información**.
+2. Click **Generate get.php** or **Get info**.
 
-El panel detectará automáticamente:
+The panel will automatically detect:
 
-* usuario
-* contraseña
-* host del servidor
-* estado del panel
+* username
+* password
+* server host
+* account status
 
-## Tecnologías
+## Technologies
 
 * HTML
 * CSS
@@ -46,13 +46,15 @@ El panel detectará automáticamente:
 * Axios
 * Bootstrap
 
-No requiere instalación ni backend.
+No installation or backend required.
 
 ## Demo
 
-El panel puede ejecutarse directamente desde el navegador.
+You can run the panel directly in your browser.
 
-## Autor
+## Author
 
-Proyecto desarrollado por **Venom**.
+Developed by **Venom**.
+
+
 
