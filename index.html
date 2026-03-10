@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google" content="notranslate">
+  <meta name="google" content="notranslate" />
   <title>Venom IPTV Panel</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -17,18 +17,13 @@
   <style>
     :root {
       --bg: #0e1117;
-      --bg-2: #151a23;
       --card: rgba(24, 29, 39, 0.94);
-      --card-2: rgba(18, 22, 31, 0.96);
       --text: #edf2ff;
       --muted: #a8b3cc;
       --accent: #5aa9ff;
       --border: rgba(255, 255, 255, 0.08);
       --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
       --radius: 16px;
-      --ok: #22c55e;
-      --warn: #f59e0b;
-      --bad: #ef4444;
       --soft-ok: rgba(34, 197, 94, 0.14);
       --soft-warn: rgba(245, 158, 11, 0.14);
       --soft-bad: rgba(239, 68, 68, 0.14);
@@ -48,9 +43,7 @@
         linear-gradient(180deg, #0b0e13 0%, #121722 100%);
     }
 
-    .notranslate {
-      translate: no;
-    }
+    .notranslate { translate: no; }
 
     .app-shell {
       max-width: 1600px;
@@ -257,7 +250,7 @@
     }
 
     #sortTable {
-      min-width: 1320px;
+      min-width: 1450px;
     }
 
     table.dataTable {
@@ -343,7 +336,7 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      max-width: 360px;
+      max-width: 430px;
     }
 
     .diag-pill {
@@ -599,7 +592,7 @@
         <h1 class="hero-title notranslate" translate="no">Venom IPTV Panel</h1>
         <div class="hero-subtitle">Analizador local de enlaces <span class="notranslate" translate="no">Xtream</span></div>
       </div>
-      <div class="hero-badge notranslate" translate="no">Venom</div>
+      <div class="hero-badge notranslate" translate="no">V E N O M</div>
     </div>
 
     <div class="app-card">
@@ -611,7 +604,7 @@
           <textarea id="contenido" class="form-control" placeholder="Pega aquí URLs IPTV, listas M3U o enlaces Xtream..."></textarea>
 
           <div class="toolbar">
-            <button class="btn btn-danger" id="btnClear" onclick="forceClearAll()">Borrar</button>
+            <button class="btn btn-danger" id="btnClear" onclick="window.forceClearAll()">Borrar</button>
             <button class="btn btn-primary" id="btnRun">Obtener info</button>
           </div>
 
@@ -682,6 +675,7 @@
                   <th>Cat. Pelis</th>
                   <th>Cat. Series</th>
                   <th>Canales</th>
+                  <th>Tipo panel</th>
                   <th>Avisos</th>
                   <th>Acciones</th>
                 </tr>
@@ -896,6 +890,33 @@
       return '<span class="state-badge state-mid">Desconocido</span>';
     }
 
+    function detectPanelType(inputUrl) {
+      try {
+        const url = new URL(inputUrl);
+        const path = (url.pathname || "").toLowerCase();
+
+        if (path.includes("player_api.php") || path.includes("get.php")) {
+          return { label: "Xtream API", level: "ok" };
+        }
+
+        if (path.includes("/live/") || path.includes("/movie/") || path.includes("/series/")) {
+          return { label: "Xtream ruta", level: "ok" };
+        }
+
+        if (url.searchParams.get("token")) {
+          return { label: "M3U con token", level: "warn" };
+        }
+
+        if (path.endsWith(".m3u") || path.endsWith(".m3u8")) {
+          return { label: "M3U simple", level: "warn" };
+        }
+
+        return { label: "Desconocido", level: "warn" };
+      } catch {
+        return { label: "Desconocido", level: "warn" };
+      }
+    }
+
     function extractUrls(text) {
       if (!text || !text.trim()) return [];
 
@@ -917,8 +938,9 @@
             const parts = url.pathname.split("/").filter(Boolean);
 
             if (parts.length >= 3) {
-              const type = parts[0].toLowerCase();
-              if (["live", "movie", "series"].includes(type) && parts.length >= 4) {
+              const first = parts[0].toLowerCase();
+
+              if (["live", "movie", "series"].includes(first) && parts.length >= 4) {
                 username = parts[1];
                 password = parts[2];
               } else {
@@ -939,7 +961,7 @@
             unique.add(dedupeKey);
             valid.push(url.toString());
           }
-        } catch (e) {
+        } catch {
           log(`URL inválida: ${raw}`);
         }
       }
@@ -1048,6 +1070,7 @@
     function renderDiagPills(diag) {
       return `
         <div class="diag-stack">
+          <span class="diag-pill diag-${diag.panel.level}">${sanitizeText(diag.panel.label)}</span>
           <span class="diag-pill diag-${diag.proxy.level}">${sanitizeText(diag.proxy.label)}</span>
           <span class="diag-pill diag-${diag.protection.level}">${sanitizeText(diag.protection.label)}</span>
           <span class="diag-pill diag-${diag.channels.level}">${sanitizeText(diag.channels.label)}</span>
@@ -1107,6 +1130,8 @@
         ? result.categories.map(c => `• ${sanitizeText(c)}`).join("<br>")
         : "Sin categorías TV disponibles.";
 
+      const panelPill = `<span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>`;
+
       const html = `
         <tr class="main-row">
           <td>${stateBadge}</td>
@@ -1120,6 +1145,7 @@
           <td>${sanitizeText(result.vodCategories)}</td>
           <td>${sanitizeText(result.seriesCategories)}</td>
           <td>${sanitizeText(result.liveStreams)}</td>
+          <td>${panelPill}</td>
           <td>${renderDiagPills(result.diagnostics)}</td>
           <td>
             <div style="display:flex; gap:6px; align-items:center;">
@@ -1137,7 +1163,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="13" style="padding: 0; border-top: 0; white-space: normal;">
+          <td colspan="14" style="padding: 0; border-top: 0; white-space: normal;">
             <div class="categories-box" id="catbox-${rowId}">
               <div style="margin-bottom:10px;"><strong>Categorías TV:</strong></div>
               <div>${categoriesHtml}</div>
@@ -1161,6 +1187,10 @@
           <div class="result-card-top">
             <div class="result-card-host">${sanitizeText(result.host)}</div>
             <div>${stateBadge}</div>
+          </div>
+
+          <div class="result-diag" style="margin-bottom:8px;">
+            <span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>
           </div>
 
           <div class="result-diag">
@@ -1247,6 +1277,7 @@
     async function fetchAccountData(inputUrl) {
       const headers = { "User-Agent": "Mozilla/5.0" };
       const cfg = buildApiConfig(inputUrl);
+      const panelType = detectPanelType(inputUrl);
 
       log(`Probando player_api.php: ${cfg.playerApiUrl}`);
 
@@ -1315,6 +1346,7 @@
       const state = getAccountState(userInfo.exp_date || null);
 
       const diagnostics = {
+        panel: panelType,
         proxy: classifyProxyStatus(inputUrl, responseHeaders, false),
         protection: classifyProtection(responseHeaders),
         channels: classifyChannelHealth(streamsRaw.length)
@@ -1334,36 +1366,54 @@
         liveStreams: streamsRaw.length,
         categories: liveCategories,
         diagnostics,
+        panelType,
         rawLink: inputUrl
       };
     }
 
     function forceClearAll() {
-      destroyTable();
+      try {
+        if ($.fn.DataTable.isDataTable("#sortTable")) {
+          const dt = $("#sortTable").DataTable();
+          dt.clear();
+          dt.destroy(true);
+        }
+      } catch (e) {
+        console.warn("No se pudo destruir DataTable:", e);
+      }
 
-      const tbody = document.querySelector("#sortTable tbody");
+      const table = document.getElementById("sortTable");
+      const tbody = table ? table.querySelector("tbody") : null;
       if (tbody) tbody.innerHTML = "";
-      el.mobileResults.innerHTML = "";
+
+      if (el.mobileResults) el.mobileResults.innerHTML = "";
 
       selectedGeneratedUrl = "";
       selectedMeta = null;
       tableInstance = null;
 
-      el.contenido.value = "";
-      el.generatedGetUrl.value = "";
-      el.statDetected.textContent = "0";
-      el.statOk.textContent = "0";
-      el.statError.textContent = "0";
-      el.statRows.textContent = "0";
-      el.indicator.textContent = "Esperando acción...";
-      el.logBox.textContent = "Logs:\n";
-      resetProgress();
+      if (el.contenido) el.contenido.value = "";
+      if (el.generatedGetUrl) el.generatedGetUrl.value = "";
 
+      if (el.statDetected) el.statDetected.textContent = "0";
+      if (el.statOk) el.statOk.textContent = "0";
+      if (el.statError) el.statError.textContent = "0";
+      if (el.statRows) el.statRows.textContent = "0";
+
+      if (el.indicator) el.indicator.textContent = "Esperando acción...";
+      if (el.logBox) el.logBox.textContent = "Logs:\n";
+
+      resetProgress();
       localStorage.removeItem("iptv_input_cache");
 
-      el.logBox.classList.remove("show");
-      el.btnToggleLogs.textContent = "+ Info";
+      if (el.logBox) el.logBox.classList.remove("show");
+      if (el.btnToggleLogs) el.btnToggleLogs.textContent = "+ Info";
       logsExpanded = false;
+
+      if (table && !table.querySelector("tbody")) {
+        const newTbody = document.createElement("tbody");
+        table.appendChild(newTbody);
+      }
 
       createTable();
     }
@@ -1407,27 +1457,41 @@
       setStatus("Procesando enlaces...");
       setProgress(0, urls.length);
 
-      for (let i = 0; i < urls.length; i++) {
-        const current = urls[i];
-        const rowId = `row-${i + 1}`;
-        log(`Procesando ${i + 1}/${urls.length}: ${current}`);
+      const concurrency = window.innerWidth < 768 ? 3 : 6;
+      let index = 0;
 
-        try {
-          const result = await fetchAccountData(current);
-          addRow(result, rowId);
-          ok++;
-          log(`OK: ${result.host} | ${result.username}`);
-        } catch (err) {
-          const errorText = normalizeAxiosError(err);
-          log(`ERROR: ${current} -> ${errorText}`);
-          error++;
+      async function worker() {
+        while (index < urls.length) {
+          const i = index++;
+          const current = urls[i];
+          const rowId = `row-${i + 1}`;
+
+          log(`Procesando ${i + 1}/${urls.length}: ${current}`);
+
+          try {
+            const result = await fetchAccountData(current);
+            addRow(result, rowId);
+            ok++;
+            log(`OK: ${result.host} | ${result.username}`);
+          } catch (err) {
+            const errorText = normalizeAxiosError(err);
+            log(`ERROR: ${current} -> ${errorText}`);
+            error++;
+          }
+
+          el.statOk.textContent = ok;
+          el.statError.textContent = error;
+          setProgress(ok + error, urls.length);
+          setStatus(`Procesando ${ok + error} de ${urls.length}...`);
         }
-
-        el.statOk.textContent = ok;
-        el.statError.textContent = error;
-        setProgress(i + 1, urls.length);
-        setStatus(`Procesando ${i + 1} de ${urls.length}...`);
       }
+
+      const workers = [];
+      for (let i = 0; i < concurrency; i++) {
+        workers.push(worker());
+      }
+
+      await Promise.all(workers);
 
       if (error > 0) {
         toggleLogs(true);
