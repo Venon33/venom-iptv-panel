@@ -1,122 +1,135 @@
 Venom IPTV Panel
 
-A lightweight web panel to analyze IPTV links based on Xtream API servers.
+Venom IPTV Panel is a lightweight web tool designed to analyze IPTV links that use Xtream Codes API or similar server structures.
 
-This tool extracts credentials from IPTV URLs and retrieves account information directly from the IPTV server using "player_api.php".
+The panel extracts credentials from IPTV URLs, queries the server API, and displays useful account information such as status, expiration date, categories, and number of channels.
 
----
-
-⚠️ Important
-
-This project is designed to run locally in your browser.
-
-When hosted on platforms like GitHub Pages, some IPTV servers may not respond due to:
-
-- CORS restrictions
-- HTTPS → HTTP security blocking (Mixed Content)
-- Server-side access limitations
-
-For the most reliable results, run the panel locally.
-
----
+The tool runs entirely in the browser and does not require any backend or installation.
 
 Features
+IPTV URL Detection
 
-- Automatic conversion of IPTV links to "get.php"
+The panel automatically detects different IPTV URL formats including:
 
-- Extracts username and password from IPTV URLs
+* get.php
+* player_api.php
+* /live/user/pass/id
+* /movie/user/pass/id
+* /series/user/pass/id
+* M3U links
+* tokenized URLs
+* Automatic get.php Generator
+* For every detected IPTV account the panel can generate a ready-to-use playlist URL:
 
-- Queries "player_api.php"
+  get.php?username=USER&password=PASS&type=m3u_plus&output=ts
 
-- Displays server information:
-  
-  - Account status
-  - Expiration date
-  - Active connections
-  - Available connections
-  - LIVE / VOD / SERIES categories
-  - Total number of channels
+  This allows quick testing or importing into IPTV players.
 
-- Responsive interface (desktop & mobile)
+Xtream API Analysis
 
-- Clean dark UI
+The panel queries the server using:
 
-- Pure HTML + JavaScript
+player_api.php
 
-- No backend required
+and extracts:
 
----
+* account status
+* expiration date
+* max connections
+* active connections
+* free connections
+* live categories
+* vod categories
+* series categories
+* number of live channels
 
-Supported IPTV URL formats
+Panel Type Detection
 
-The panel automatically detects credentials from multiple formats.
+The tool attempts to identify the type of IPTV service:
 
-Example 1
+  Type                              Description
+Xtream API	              Standard Xtream Codes panel
+Xtream route	            /live/user/pass style URL
+M3U simple	              Static playlist
+M3U token	                Token protected playlist
+Unknown	                  Cannot determine panel type
 
-http://example.com:8080/get.php?username=user&password=pass&type=m3u
 
-Example 2
 
-http://example.com:8080/live/user/pass/12345.ts
+Diagnostics
+Additional server diagnostics are displayed:
 
-Example 3
+* proxy / direct access detection
+* reverse proxy indicators
+* Cloudflare detection
+* channel count health indicator
 
-http://example.com:8080/player_api.php?username=user&password=pass
 
----
+Parallel Processing
+Multiple IPTV links are analyzed simultaneously.
 
-Usage
+Typical performance:
 
-1. Open the panel in your browser.
+10 IPTV links → 2–4 seconds
 
-2. Paste one or multiple IPTV URLs in the input field.
+The panel automatically adjusts processing depending on device:
+
+Device	     Parallel requests
+Mobile	          3
+Desktop	          6
+Mobile         Friendly UI
+
+The interface automatically switches to card view on mobile devices, making it easier to read account data.
+
+Desktop uses a full data table.
+
+How to Use
+
+1- Open the panel in your browser.
+2- Paste IPTV links into the input box.
 
 Example:
 
-http://example.com:8080/get.php?username=user&password=pass&type=m3u
+http://example.com:8080/live/user/pass/12345.ts
 
-3. Click Get info.
-
+Click Obtener info.
 The panel will automatically:
 
-- extract username and password
-- detect the IPTV server
-- query "player_api.php"
-- display account information and categories.
+* detect credentials
+* query the Xtream API
+* display account information
 
----
+Generate Playlist
+After analysis you can click:
 
-Running locally
+Generar get.php
 
-Download or clone the repository and open:
+to generate a playlist URL.
 
-index.html
-
-with any modern browser.
-
-No installation is required.
-
----
+The generated URL appears in the get.php panel where it can be saved as a .txt file.
 
 Technologies
+This project is built using simple frontend technologies:
 
-- HTML
-- CSS
-- JavaScript
-- Axios
-- Bootstrap
-- DataTables
+* HTML
+* CSS
+* JavaScript
+* Axios
+* Bootstrap
+* DataTables
 
----
+No server, database, or backend is required.
 
-Project purpose
+Privacy
+All analysis is performed locally in your browser.
+The tool does not send data to any external server.
 
-This project is intended as an informational IPTV analysis tool.
-
-It does not host streams or distribute IPTV content.
-
----
+Disclaimer
+This project is provided for educational and testing purposes only.
+The author is not responsible for misuse of this tool or for accessing IPTV services without proper authorization.
 
 Author
 
 Developed by Venom
+
+  
