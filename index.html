@@ -46,7 +46,7 @@
     .notranslate { translate: no; }
 
     .app-shell {
-      max-width: 1600px;
+      max-width: 1750px;
       margin: 0 auto;
     }
 
@@ -154,7 +154,8 @@
 
     .toolbar,
     .generated-actions,
-    .info-bar {
+    .info-bar,
+    .legend-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -250,7 +251,7 @@
     }
 
     #sortTable {
-      min-width: 1450px;
+      min-width: 1760px;
     }
 
     table.dataTable {
@@ -336,10 +337,10 @@
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      max-width: 430px;
+      max-width: 620px;
     }
 
-    .diag-pill {
+    .diag-pill, .legend-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -351,22 +352,33 @@
       border: 1px solid transparent;
     }
 
-    .diag-ok {
+    .diag-ok, .legend-ok {
       background: var(--soft-ok);
       color: #9ef0b8;
       border-color: rgba(34,197,94,0.30);
     }
 
-    .diag-warn {
+    .diag-warn, .legend-warn {
       background: var(--soft-warn);
       color: #ffe09f;
       border-color: rgba(245,158,11,0.30);
     }
 
-    .diag-bad {
+    .diag-bad, .legend-bad {
       background: var(--soft-bad);
       color: #ffb4b4;
       border-color: rgba(239,68,68,0.30);
+    }
+
+    .compact-legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .compact-legend .legend-pill {
+      min-width: auto;
     }
 
     .state-badge {
@@ -541,6 +553,22 @@
         min-height: 40px;
       }
 
+      .legend-row {
+        flex-direction: row;
+        gap: 6px;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+
+      .legend-row .legend-pill {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        font-size: 0.68rem;
+        padding: 5px 6px;
+      }
+
       .stats {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
@@ -580,7 +608,16 @@
       }
 
       .diag-stack {
+        flex-direction: column;
+        align-items: stretch;
         max-width: 100%;
+        gap: 5px;
+      }
+
+      .diag-pill,
+      .legend-pill {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -590,7 +627,7 @@
     <div class="hero">
       <div>
         <h1 class="hero-title notranslate" translate="no">Venom IPTV Panel</h1>
-        <div class="hero-subtitle">Analizador local de enlaces <span class="notranslate" translate="no">Xtream</span></div>
+        <div class="hero-subtitle">Analizador local de enlaces Xtream</div>
       </div>
       <div class="hero-badge notranslate" translate="no">V E N O M</div>
     </div>
@@ -605,6 +642,7 @@
 
           <div class="toolbar">
             <button class="btn btn-danger" id="btnClear" onclick="window.forceClearAll()">Borrar</button>
+            <button class="btn btn-outline-light" id="btnPaste">Pegar</button>
             <button class="btn btn-primary" id="btnRun">Obtener info</button>
           </div>
 
@@ -638,11 +676,7 @@
           <div class="section-title">URL generada</div>
 
           <label for="generatedGetUrl" class="notranslate" translate="no">get.php</label>
-          <textarea
-            id="generatedGetUrl"
-            class="form-control"
-            placeholder="Aquí aparecerá la URL get.php generada..."
-          ></textarea>
+          <textarea id="generatedGetUrl" class="form-control" placeholder="Aquí aparecerá la URL get.php generada..."></textarea>
 
           <div class="generated-actions">
             <button class="btn btn-outline-light" id="btnSaveTxt">Guardar .txt</button>
@@ -655,8 +689,14 @@
         <div class="panel">
           <div class="section-title">Resultados</div>
 
+          <div class="legend-row compact-legend">
+            <span class="legend-pill legend-ok">✔ Bien</span>
+            <span class="legend-pill legend-warn">⚠ Aviso</span>
+            <span class="legend-pill legend-bad">✖ Error</span>
+          </div>
+
           <div class="info-bar">
-            <button class="btn btn-sm btn-outline-light" id="btnToggleLogs">+ Info</button>
+            <button class="btn btn-sm btn-outline-light" id="btnToggleLogs">Ver info</button>
             <span class="info-hint">Abre los logs solo si necesitas ver el detalle técnico.</span>
           </div>
 
@@ -676,6 +716,9 @@
                   <th>Cat. Series</th>
                   <th>Canales</th>
                   <th>Tipo panel</th>
+                  <th>Modo</th>
+                  <th>Stream ID</th>
+                  <th>Acceso red</th>
                   <th>Avisos</th>
                   <th>Acciones</th>
                 </tr>
@@ -702,6 +745,8 @@
     let selectedGeneratedUrl = "";
     let selectedMeta = null;
     let logsExpanded = false;
+    let isRunning = false;
+    let currentRunId = 0;
 
     const el = {
       contenido: document.getElementById("contenido"),
@@ -712,6 +757,7 @@
       statError: document.getElementById("statError"),
       statRows: document.getElementById("statRows"),
       btnRun: document.getElementById("btnRun"),
+      btnPaste: document.getElementById("btnPaste"),
       logBox: document.getElementById("logBox"),
       btnToggleLogs: document.getElementById("btnToggleLogs"),
       generatedGetUrl: document.getElementById("generatedGetUrl"),
@@ -735,7 +781,7 @@
       }
 
       el.logBox.classList.toggle("show", logsExpanded);
-      el.btnToggleLogs.textContent = logsExpanded ? "- Info" : "+ Info";
+      el.btnToggleLogs.textContent = logsExpanded ? "Ocultar info" : "Ver info";
     }
 
     function createTable() {
@@ -793,15 +839,6 @@
     function resetProgress() {
       el.progressBar.style.width = "0%";
       el.progressBar.textContent = "0%";
-    }
-
-    function saveInput() {
-      localStorage.setItem("iptv_input_cache", el.contenido.value);
-    }
-
-    function loadInput() {
-      const saved = localStorage.getItem("iptv_input_cache");
-      if (saved) el.contenido.value = saved;
     }
 
     function sanitizeText(value) {
@@ -917,6 +954,35 @@
       }
     }
 
+    function detectNetworkRestriction(infoStatus, liveStatus, vodStatus, seriesStatus, streamStatus, liveCount) {
+      const statuses = [infoStatus, liveStatus, vodStatus, seriesStatus, streamStatus].filter(v => typeof v === "number");
+
+      if (statuses.includes(403)) {
+        return { label: "Posible bloqueo por red/IP", level: "bad" };
+      }
+
+      if (statuses.includes(401)) {
+        return { label: "Autorización restringida", level: "bad" };
+      }
+
+      if (infoStatus === 200 && liveCount === 0 && (liveStatus === 200 || streamStatus === 200)) {
+        return { label: "Acceso parcial", level: "warn" };
+      }
+
+      if (infoStatus === 200) {
+        return { label: "Acceso normal", level: "ok" };
+      }
+
+      return { label: "Restricción desconocida", level: "warn" };
+    }
+
+    function getGlobalNetworkHint(errorCount, okCount) {
+      if (errorCount === 0) return "";
+      if (okCount === 0 && errorCount > 0) return " (Prueba con o sin VPN)";
+      if (okCount > 0 && errorCount > 0) return " (Resultados dependen de la red/VPN)";
+      return "";
+    }
+
     function extractUrls(text) {
       if (!text || !text.trim()) return [];
 
@@ -956,7 +1022,6 @@
           }
 
           const dedupeKey = `${url.hostname}:${url.port || ""}|${username}|${password}`;
-
           if (!unique.has(dedupeKey)) {
             unique.add(dedupeKey);
             valid.push(url.toString());
@@ -977,17 +1042,35 @@
 
       let username = url.searchParams.get("username");
       let password = url.searchParams.get("password");
+      let streamId = null;
+      let detectedMode = "unknown";
+
+      const parts = url.pathname.split("/").filter(Boolean);
+
+      if (username && password) {
+        if ((url.pathname || "").toLowerCase().includes("player_api.php")) {
+          detectedMode = "player_api";
+        } else if ((url.pathname || "").toLowerCase().includes("get.php")) {
+          detectedMode = "get_php";
+        } else {
+          detectedMode = "query_credentials";
+        }
+      }
 
       if (!username || !password) {
-        const parts = url.pathname.split("/").filter(Boolean);
-
         if (parts.length >= 3) {
-          if (["live", "movie", "series"].includes(parts[0].toLowerCase()) && parts.length >= 4) {
+          const first = parts[0]?.toLowerCase();
+
+          if (["live", "movie", "series"].includes(first) && parts.length >= 4) {
             username = parts[1];
             password = parts[2];
+            streamId = parts[3] || null;
+            detectedMode = `${first}_route`;
           } else {
             username = parts[0];
             password = parts[1];
+            streamId = parts[2] || null;
+            detectedMode = "short_route";
           }
         }
       }
@@ -1011,7 +1094,10 @@
         protocol,
         apiBase,
         playerApiUrl,
-        getUrl
+        getUrl,
+        originalPath: url.pathname,
+        streamId,
+        detectedMode
       };
     }
 
@@ -1067,15 +1153,62 @@
       return { label: "0 canales", level: "bad" };
     }
 
+    function diagnoseApiFailure(err, cfg) {
+      const msg = String(err?.message || err || "").toLowerCase();
+
+      if (msg.includes("network error")) {
+        return {
+          short: "Error de red",
+          detail: "Sin respuesta del panel. Posible DNS caído, bloqueo por IP/red, CORS o API no accesible."
+        };
+      }
+
+      if (msg.includes("timeout")) {
+        return {
+          short: "Timeout",
+          detail: "El panel tarda demasiado en responder. Posible panel lento, filtrado o saturación."
+        };
+      }
+
+      if (msg.includes("403")) {
+        return {
+          short: "403 bloqueado",
+          detail: "Acceso denegado. Posible restricción por IP, red, país o protección del servidor."
+        };
+      }
+
+      if (msg.includes("404")) {
+        return {
+          short: "404 API no encontrada",
+          detail: "La ruta player_api.php no responde en ese host/puerto."
+        };
+      }
+
+      if (msg.includes("401")) {
+        return {
+          short: "401 no autorizado",
+          detail: "Posible credencial inválida o acceso restringido."
+        };
+      }
+
+      return {
+        short: "API inaccesible",
+        detail: `No se pudo consultar ${cfg.playerApiUrl}`
+      };
+    }
+
     function renderDiagPills(diag) {
       return `
         <div class="diag-stack">
-          <span class="diag-pill diag-${diag.panel.level}">${sanitizeText(diag.panel.label)}</span>
           <span class="diag-pill diag-${diag.proxy.level}">${sanitizeText(diag.proxy.label)}</span>
           <span class="diag-pill diag-${diag.protection.level}">${sanitizeText(diag.protection.label)}</span>
           <span class="diag-pill diag-${diag.channels.level}">${sanitizeText(diag.channels.label)}</span>
         </div>
       `;
+    }
+
+    function renderNetworkPill(networkHint) {
+      return `<span class="diag-pill diag-${networkHint.level}">${sanitizeText(networkHint.label)}</span>`;
     }
 
     function generateGetForResult(rawLink, host, username, state) {
@@ -1125,12 +1258,12 @@
 
     function addDesktopRow(result, rowId) {
       const stateBadge = getStateBadge(result.state);
-
       const categoriesHtml = result.categories.length
         ? result.categories.map(c => `• ${sanitizeText(c)}`).join("<br>")
         : "Sin categorías TV disponibles.";
 
       const panelPill = `<span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>`;
+      const networkPill = renderNetworkPill(result.networkHint);
 
       const html = `
         <tr class="main-row">
@@ -1146,6 +1279,9 @@
           <td>${sanitizeText(result.seriesCategories)}</td>
           <td>${sanitizeText(result.liveStreams)}</td>
           <td>${panelPill}</td>
+          <td>${sanitizeText(result.detectedMode || "N/D")}</td>
+          <td>${sanitizeText(result.streamId || "N/D")}</td>
+          <td>${networkPill}</td>
           <td>${renderDiagPills(result.diagnostics)}</td>
           <td>
             <div style="display:flex; gap:6px; align-items:center;">
@@ -1163,7 +1299,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="14" style="padding: 0; border-top: 0; white-space: normal;">
+          <td colspan="17" style="padding: 0; border-top: 0; white-space: normal;">
             <div class="categories-box" id="catbox-${rowId}">
               <div style="margin-bottom:10px;"><strong>Categorías TV:</strong></div>
               <div>${categoriesHtml}</div>
@@ -1177,7 +1313,6 @@
 
     function addMobileCard(result, rowId) {
       const stateBadge = getStateBadge(result.state);
-
       const categoriesHtml = result.categories.length
         ? result.categories.map(c => `• ${sanitizeText(c)}`).join("<br>")
         : "Sin categorías TV disponibles.";
@@ -1191,6 +1326,7 @@
 
           <div class="result-diag" style="margin-bottom:8px;">
             <span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>
+            ${renderNetworkPill(result.networkHint)}
           </div>
 
           <div class="result-diag">
@@ -1234,6 +1370,14 @@
               <span class="result-item-label">Canales</span>
               <span class="result-item-value">${sanitizeText(result.liveStreams)}</span>
             </div>
+            <div class="result-item">
+              <span class="result-item-label">Modo</span>
+              <span class="result-item-value">${sanitizeText(result.detectedMode || "N/D")}</span>
+            </div>
+            <div class="result-item">
+              <span class="result-item-label">Stream ID</span>
+              <span class="result-item-value">${sanitizeText(result.streamId || "N/D")}</span>
+            </div>
           </div>
 
           <div class="result-card-actions">
@@ -1274,11 +1418,27 @@
       return "Error desconocido";
     }
 
+    async function axiosGetWithRetry(url, options = {}, retries = 1) {
+      try {
+        return await axios.get(url, options);
+      } catch (err) {
+        if (retries > 0) {
+          return await axiosGetWithRetry(url, options, retries - 1);
+        }
+        throw err;
+      }
+    }
+
     async function fetchAccountData(inputUrl) {
       const headers = { "User-Agent": "Mozilla/5.0" };
       const cfg = buildApiConfig(inputUrl);
       const panelType = detectPanelType(inputUrl);
 
+      log(`URL original: ${inputUrl}`);
+      log(`Modo detectado: ${cfg.detectedMode}`);
+      log(`Username detectado: ${cfg.username}`);
+      log(`Password detectada: ${cfg.password}`);
+      if (cfg.streamId) log(`Stream ID detectado: ${cfg.streamId}`);
       log(`Probando player_api.php: ${cfg.playerApiUrl}`);
 
       let infoResponse;
@@ -1288,38 +1448,44 @@
       let streamsResponse;
 
       try {
-        infoResponse = await axios.get(cfg.playerApiUrl, {
+        infoResponse = await axiosGetWithRetry(cfg.playerApiUrl, {
           headers,
           timeout: REQUEST_TIMEOUT,
           validateStatus: () => true
-        });
+        }, 1);
       } catch (err) {
-        throw new Error(`Sin respuesta al consultar player_api.php: ${err.message}`);
+        const diag = diagnoseApiFailure(err, cfg);
+        throw new Error(`${diag.short}: ${diag.detail}`);
       }
 
-      if (infoResponse.status === 404) throw new Error("HTTP 404 - player_api.php no existe");
-      if (infoResponse.status === 403) throw new Error("HTTP 403 - acceso denegado");
+      if (infoResponse.status === 404) throw new Error("HTTP 404 - player_api.php no existe en esa ruta");
+      if (infoResponse.status === 403) throw new Error("HTTP 403 - acceso denegado por el panel");
+      if (infoResponse.status === 401) throw new Error("HTTP 401 - no autorizado");
       if (infoResponse.status >= 400) throw new Error(`HTTP ${infoResponse.status} en player_api.php`);
 
       try {
-        liveCategoriesResponse = await axios.get(
+        liveCategoriesResponse = await axiosGetWithRetry(
           `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_categories`,
-          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true },
+          1
         );
 
-        vodResponse = await axios.get(
+        vodResponse = await axiosGetWithRetry(
           `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_vod_categories`,
-          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true },
+          1
         );
 
-        seriesResponse = await axios.get(
+        seriesResponse = await axiosGetWithRetry(
           `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_series_categories`,
-          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true },
+          1
         );
 
-        streamsResponse = await axios.get(
+        streamsResponse = await axiosGetWithRetry(
           `${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_streams`,
-          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true }
+          { headers, timeout: REQUEST_TIMEOUT, validateStatus: () => true },
+          1
         );
       } catch (err) {
         throw new Error(`Error al consultar categorías/canales: ${err.message}`);
@@ -1335,7 +1501,7 @@
       const userInfo = info.user_info || {};
 
       if (!userInfo || Object.keys(userInfo).length === 0) {
-        throw new Error("Respuesta Xtream no compatible");
+        throw new Error("Respuesta Xtream no compatible o panel sin datos de usuario");
       }
 
       const responseHeaders = infoResponse.headers || {};
@@ -1345,8 +1511,16 @@
 
       const state = getAccountState(userInfo.exp_date || null);
 
+      const networkHint = detectNetworkRestriction(
+        infoResponse.status,
+        liveCategoriesResponse.status,
+        vodResponse.status,
+        seriesResponse.status,
+        streamsResponse.status,
+        streamsRaw.length
+      );
+
       const diagnostics = {
-        panel: panelType,
         proxy: classifyProxyStatus(inputUrl, responseHeaders, false),
         protection: classifyProtection(responseHeaders),
         channels: classifyChannelHealth(streamsRaw.length)
@@ -1367,146 +1541,187 @@
         categories: liveCategories,
         diagnostics,
         panelType,
-        rawLink: inputUrl
+        networkHint,
+        rawLink: inputUrl,
+        detectedMode: cfg.detectedMode,
+        streamId: cfg.streamId
       };
     }
 
-    function forceClearAll() {
+    function hardResetResults() {
       try {
-        if ($.fn.DataTable.isDataTable("#sortTable")) {
-          const dt = $("#sortTable").DataTable();
-          dt.clear();
-          dt.destroy(true);
-        }
-      } catch (e) {
-        console.warn("No se pudo destruir DataTable:", e);
-      }
+        destroyTable();
+      } catch (e) {}
 
       const table = document.getElementById("sortTable");
-      const tbody = table ? table.querySelector("tbody") : null;
-      if (tbody) tbody.innerHTML = "";
+      if (table) {
+        const tbody = table.querySelector("tbody");
+        if (tbody) tbody.innerHTML = "";
+      }
 
       if (el.mobileResults) el.mobileResults.innerHTML = "";
 
+      el.statDetected.textContent = "0";
+      el.statOk.textContent = "0";
+      el.statError.textContent = "0";
+      el.statRows.textContent = "0";
+
+      el.logBox.textContent = "Logs:\n";
+      resetProgress();
+      clearGeneratedUrl();
+
+      el.logBox.classList.remove("show");
+      el.btnToggleLogs.textContent = "Ver info";
+      logsExpanded = false;
+    }
+
+    function forceClearAll() {
+      currentRunId++;
       selectedGeneratedUrl = "";
       selectedMeta = null;
       tableInstance = null;
+      isRunning = false;
 
       if (el.contenido) el.contenido.value = "";
       if (el.generatedGetUrl) el.generatedGetUrl.value = "";
 
-      if (el.statDetected) el.statDetected.textContent = "0";
-      if (el.statOk) el.statOk.textContent = "0";
-      if (el.statError) el.statError.textContent = "0";
-      if (el.statRows) el.statRows.textContent = "0";
+      hardResetResults();
 
-      if (el.indicator) el.indicator.textContent = "Esperando acción...";
-      if (el.logBox) el.logBox.textContent = "Logs:\n";
+      el.indicator.textContent = "Esperando acción...";
+      el.btnRun.disabled = false;
 
-      resetProgress();
-      localStorage.removeItem("iptv_input_cache");
-
-      if (el.logBox) el.logBox.classList.remove("show");
-      if (el.btnToggleLogs) el.btnToggleLogs.textContent = "+ Info";
-      logsExpanded = false;
-
-      if (table && !table.querySelector("tbody")) {
-        const newTbody = document.createElement("tbody");
-        table.appendChild(newTbody);
-      }
-
-      createTable();
+      setTimeout(() => createTable(), 0);
     }
 
     async function runExtraction() {
-      saveInput();
-
-      destroyTable();
-      document.querySelector("#sortTable tbody").innerHTML = "";
-      el.mobileResults.innerHTML = "";
-      clearGeneratedUrl();
-      toggleLogs(false);
-      el.logBox.textContent = "Logs:\n";
-      el.statRows.textContent = "0";
-
-      const rawText = el.contenido.value.trim();
-      if (!rawText) {
-        setStatus("Pega contenido antes de ejecutar.");
-        resetProgress();
-        createTable();
+      if (isRunning) {
+        setStatus("Ya hay un análisis en curso...");
         return;
       }
 
-      const urls = extractUrls(rawText);
-      el.statDetected.textContent = urls.length;
-      el.statOk.textContent = "0";
-      el.statError.textContent = "0";
+      isRunning = true;
+      el.btnRun.disabled = true;
 
-      log(`URLs detectadas: ${urls.length}`);
+      const runId = ++currentRunId;
 
-      if (!urls.length) {
-        setStatus("No se detectaron URLs válidas con credenciales.");
-        resetProgress();
-        createTable();
-        return;
-      }
+      try {
+        hardResetResults();
 
-      let ok = 0;
-      let error = 0;
+        const rawText = el.contenido.value.trim();
+        if (!rawText) {
+          setStatus("Pega contenido antes de ejecutar.");
+          createTable();
+          return;
+        }
 
-      setStatus("Procesando enlaces...");
-      setProgress(0, urls.length);
+        const urls = extractUrls(rawText);
+        el.statDetected.textContent = urls.length;
+        el.statOk.textContent = "0";
+        el.statError.textContent = "0";
 
-      const concurrency = window.innerWidth < 768 ? 3 : 6;
-      let index = 0;
+        log(`URLs detectadas: ${urls.length}`);
 
-      async function worker() {
-        while (index < urls.length) {
-          const i = index++;
-          const current = urls[i];
-          const rowId = `row-${i + 1}`;
+        if (!urls.length) {
+          setStatus("No se detectaron URLs válidas con credenciales.");
+          createTable();
+          return;
+        }
 
-          log(`Procesando ${i + 1}/${urls.length}: ${current}`);
+        let ok = 0;
+        let error = 0;
 
-          try {
-            const result = await fetchAccountData(current);
-            addRow(result, rowId);
-            ok++;
-            log(`OK: ${result.host} | ${result.username}`);
-          } catch (err) {
-            const errorText = normalizeAxiosError(err);
-            log(`ERROR: ${current} -> ${errorText}`);
-            error++;
+        setStatus("Procesando enlaces...");
+        setProgress(0, urls.length);
+
+        const concurrency = window.innerWidth < 768 ? 3 : 6;
+        let index = 0;
+
+        async function worker() {
+          while (index < urls.length) {
+            if (runId !== currentRunId) return;
+
+            const i = index++;
+            const current = urls[i];
+            const rowId = `row-${i + 1}`;
+
+            log(`Procesando ${i + 1}/${urls.length}: ${current}`);
+
+            try {
+              const startedAt = Date.now();
+              const result = await fetchAccountData(current);
+              if (runId !== currentRunId) return;
+
+              const ms = Date.now() - startedAt;
+              addRow(result, rowId);
+              ok++;
+              log(`OK: ${result.host} | ${result.username} | modo=${result.detectedMode || "N/D"} | ${ms} ms`);
+            } catch (err) {
+              if (runId !== currentRunId) return;
+
+              const errorText = normalizeAxiosError(err);
+              log(`ERROR: ${current} -> ${errorText}`);
+              error++;
+            }
+
+            if (runId !== currentRunId) return;
+
+            el.statOk.textContent = ok;
+            el.statError.textContent = error;
+            setProgress(ok + error, urls.length);
+            setStatus(`Procesando ${ok + error} de ${urls.length}...`);
           }
+        }
 
-          el.statOk.textContent = ok;
-          el.statError.textContent = error;
-          setProgress(ok + error, urls.length);
-          setStatus(`Procesando ${ok + error} de ${urls.length}...`);
+        const workers = [];
+        for (let i = 0; i < concurrency; i++) {
+          workers.push(worker());
+        }
+
+        await Promise.all(workers);
+
+        if (runId !== currentRunId) return;
+
+        createTable();
+        updateRowCount();
+        setProgressDone();
+
+        const vpnHint = getGlobalNetworkHint(error, ok);
+        setStatus(`Finalizado. OK: ${ok} | Errores: ${error}${vpnHint}`);
+
+        log(`Finalizado. OK=${ok}, Errores=${error}${vpnHint}`);
+      } finally {
+        if (runId === currentRunId) {
+          isRunning = false;
+          el.btnRun.disabled = false;
         }
       }
+    }
 
-      const workers = [];
-      for (let i = 0; i < concurrency; i++) {
-        workers.push(worker());
-      }
+    if (el.btnPaste) {
+      el.btnPaste.addEventListener("click", async () => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            const text = await navigator.clipboard.readText();
+            el.contenido.value = text || "";
+            setStatus("Contenido pegado.");
+            return;
+          }
 
-      await Promise.all(workers);
+          el.contenido.focus();
+          const ok = document.execCommand("paste");
 
-      if (error > 0) {
-        toggleLogs(true);
-      }
-
-      createTable();
-      updateRowCount();
-      setProgressDone();
-      setStatus(`Finalizado. OK: ${ok} | Errores: ${error}`);
-      log(`Finalizado. OK=${ok}, Errores=${error}`);
+          if (ok) {
+            setStatus("Contenido pegado.");
+          } else {
+            setStatus("No se pudo acceder al portapapeles. Mantén pulsado y pega manualmente.");
+          }
+        } catch (e) {
+          setStatus("No se pudo acceder al portapapeles. Mantén pulsado y pega manualmente.");
+        }
+      });
     }
 
     el.btnRun.addEventListener("click", runExtraction);
-    el.contenido.addEventListener("input", saveInput);
-
     el.btnSaveTxt.addEventListener("click", saveGeneratedTxt);
     el.btnClearGenerated.addEventListener("click", () => {
       clearGeneratedUrl();
@@ -1514,7 +1729,12 @@
     });
     el.btnToggleLogs.addEventListener("click", () => toggleLogs());
 
-    loadInput();
+    window.addEventListener("beforeunload", () => {
+      try {
+        sessionStorage.clear();
+      } catch (e) {}
+    });
+
     createTable();
 
     window.toggleCategories = toggleCategories;
