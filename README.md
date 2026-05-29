@@ -1,6 +1,4 @@
-[6/4/26 12:37] Notas: from pathlib import Path
-
-readme = """# Venom IPTV Panel
+## Venom IPTV Panel
 
 Venom IPTV Panel is a lightweight local web tool for analyzing IPTV links based on Xtream Codes / Xtream API style servers.
 
