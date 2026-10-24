@@ -731,6 +731,57 @@
     .venom-category-option input { flex: 0 0 auto; accent-color: #39d66f; }
     .venom-category-option span { min-width: 0; overflow-wrap: anywhere; }
     .category-selector-summary { margin-bottom: 10px; color: #dfffea; }
+
+    .venom-errors-panel{margin-top:20px;padding:14px;border:1px solid rgba(245,177,48,.3);border-radius:16px;background:rgba(245,177,48,.055)}
+    .venom-errors-heading{display:flex;justify-content:space-between;gap:12px;color:#ffe0a2}
+    .venom-errors-hint{color:var(--muted);font-size:.79rem;margin:7px 0 10px}
+    .venom-errors-list{display:grid;gap:9px;max-height:320px;overflow-y:auto}
+    .venom-error-item{padding:10px;background:rgba(0,0,0,.24);border-radius:10px;overflow-wrap:anywhere}
+    .venom-error-item strong{display:block;color:#f3fff7}
+    .venom-error-item small{display:block;color:#ffb3c2;margin-top:4px}
+    .venom-errors-empty{color:var(--muted);font-size:.86rem}
+    .categories-box label:has(input[type="checkbox"]:checked){background:rgba(57,214,111,.16);border-radius:8px;color:#dcffeb}
+    .categories-box input[type="checkbox"]{accent-color:#39d66f}
+    .venom-title-option{transition:background .18s,border-color .18s,box-shadow .18s;border:1px solid rgba(255,255,255,.1)}
+    .venom-title-option:has(input:checked){background:rgba(57,214,111,.2);border-color:#39d66f;box-shadow:inset 0 0 0 1px rgba(57,214,111,.24)}
+    .venom-title-option:has(input:checked) span{color:#e0ffe9;font-weight:800}
+    .venom-title-option input{accent-color:#39d66f}
+    .venom-global-hit:hover{background:rgba(127,92,255,.12)}
+    .result-card{border-color:rgba(127,92,255,.28)}
+    .result-card:hover{border-color:rgba(57,214,111,.46);box-shadow:0 16px 46px rgba(57,214,111,.09)}
+    .result-item:nth-child(4n + 1){border-left:3px solid rgba(57,214,111,.68)}
+    .result-item:nth-child(4n + 2){border-left:3px solid rgba(127,92,255,.72)}
+    .result-item:nth-child(4n + 3){border-left:3px solid rgba(72,173,237,.7)}
+    .result-item:nth-child(4n + 4){border-left:3px solid rgba(245,177,48,.7)}
+    .venom-inline-download{position:sticky;top:0;display:flex;justify-content:flex-end;padding:10px 4px;background:rgba(6,20,15,.96);z-index:2}
+    .venom-inline-download .btn{box-shadow:0 6px 20px rgba(57,214,111,.19)}
+    .venom-download-summary{margin-top:12px;padding:10px 12px;border-left:3px solid #39d66f;background:rgba(57,214,111,.08);font-size:.84rem}
+    .venom-export-progress{margin-top:10px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px}
+    .venom-export-progress[hidden]{display:none!important}
+    .venom-export-bar{height:7px;border-radius:9px;width:0;background:linear-gradient(90deg,#39d66f,#7f5cff);transition:width .2s}
+    .venom-export-progress small{display:block;margin-top:5px}
+    .venom-global-search{margin:15px 0;background:rgba(16,24,28,.95)}
+    .venom-global-search p{color:var(--muted);font-size:.84rem}
+    .venom-global-search input{background:#10191b;color:#fff;border:1px solid rgba(57,214,111,.3)}
+    .venom-global-search input:focus{background:#10191b;color:#fff}
+    .venom-global-results{margin-top:12px;max-height:320px;overflow-y:auto}
+    .venom-global-hit{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+    .venom-global-hit span{min-width:0}
+    .venom-loading-row{margin:12px 0;color:var(--muted)}
+    .venom-loading-row[hidden]{display:none!important}
+    .venom-loading-track{height:9px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin-bottom:6px}
+    .venom-loading-moving{height:100%;width:35%;border-radius:99px;background:#39d66f;animation:venom-progress 1.4s ease-in-out infinite alternate}
+    @keyframes venom-progress{from{transform:translateX(-105%)}to{transform:translateX(285%)}}
+    @media(prefers-reduced-motion:reduce){.venom-loading-moving{animation:none;width:100%}}
+    .venom-picker-toolbar{display:flex;flex-wrap:wrap;gap:8px}
+    .venom-close-bottom{display:block;width:100%;margin-top:14px}
+    .venom-individual-picker{margin-top:15px;padding:14px;border:1px solid var(--border-accent);border-radius:15px;background:rgba(57,214,111,.035)}
+    .venom-title-search{margin:12px 0;background:#101719;color:#fff;border:1px solid rgba(255,255,255,.15)}
+    .venom-title-search:focus{background:#101719;color:#fff}
+    .venom-title-heading{font-weight:750;margin:12px 0 6px}
+    .venom-title-list{max-height:240px;overflow-y:auto;display:grid;gap:5px;padding:5px 0}
+    .venom-title-option{display:flex;align-items:flex-start;gap:9px;margin:0;padding:7px 9px;background:rgba(255,255,255,.03);border-radius:8px;overflow-wrap:anywhere}
+    .venom-title-option input{margin-top:4px;flex-shrink:0}
     /* Resultados adaptativos: sin desplazamiento horizontal. */
     .table-wrap { display: none !important; }
     .mobile-results { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; min-width: 0; align-items: stretch; }
@@ -756,10 +807,21 @@
           <div class="progress"><div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width:0%">0%</div></div><div class="status-text" id="indicator">Esperando acción...</div>
           <div class="vpn-alert" id="vpnAlert">⚠ Hay errores. Prueba VPN ON/OFF.</div>
         </div>
-        <div class="panel"><div class="section-title">URL generada</div><label for="generatedGetUrl" class="notranslate" translate="no">get.php</label><textarea id="generatedGetUrl" class="form-control" placeholder="Aquí aparecerá la URL get.php generada..."></textarea><div class="generated-actions"><button class="btn btn-outline-light" id="btnSaveTxt">Guardar .txt</button><button class="btn btn-outline-light" id="btnClearGenerated">Limpiar</button></div></div>
+        <div class="panel"><div class="section-title">URL generada</div><label for="generatedGetUrl" class="notranslate" translate="no">get.php</label><textarea id="generatedGetUrl" class="form-control" placeholder="Aquí aparecerá la URL get.php generada..."></textarea><div class="generated-actions"><button class="btn btn-outline-light" id="btnSaveTxt">Guardar .txt</button><button class="btn btn-outline-light" id="btnClearGenerated">Limpiar</button></div>
+          <section class="venom-errors-panel" aria-label="Listas con errores">
+            <div class="venom-errors-heading"><strong>⚠ Listas con errores</strong><span id="venomErrorCount">0</span></div>
+            <p class="venom-errors-hint">Aquí aparecerán las conexiones fallidas durante el último análisis.</p>
+            <div id="venomErrorList" class="venom-errors-list" aria-live="polite"><span class="venom-errors-empty">Sin errores detectados.</span></div>
+          </section></div>
       </div>
       <div class="grid-bottom"><div class="panel"><div class="section-title">Resultados</div><div class="legend-row compact-legend"><span class="legend-pill legend-ok">✔ Bien</span><span class="legend-pill legend-warn">⚠ Aviso</span><span class="legend-pill legend-bad">✖ Error</span></div><div class="info-bar"><button class="btn btn-sm btn-outline-light" id="btnToggleLogs">Ver info</button><span class="info-hint">Abre los logs solo si necesitas ver el detalle técnico.</span></div>
-        <div class="table-wrap"><table class="table table-striped table-bordered mb-0" id="sortTable" width="100%"><thead><tr><th>Estado</th><th class="notranslate" translate="no">Host/Portal</th><th>Usuario/MAC</th><th>Caduca</th><th>Máx. conect.</th><th>Activas</th><th>Libres</th><th>Cat. TV</th><th>Cat. Pelis</th><th>Cat. Series</th><th>Canales</th><th>Tipo panel</th><th>Modo</th><th>Stream ID</th><th>Acceso red</th><th>Avisos</th><th>Acciones</th></tr></thead><tbody></tbody></table></div><div class="mobile-results" id="mobileResults"></div><div class="log-box" id="logBox">Logs:
+        <section class="venom-global-search panel" id="venomGlobalSearch">
+      <div class="section-title">🔎 Buscador global</div>
+      <p>Busca entre los canales analizados y los catálogos de películas y series que hayas cargado. No hace nuevas consultas.</p>
+      <input id="venomGlobalQuery" class="form-control" type="search" placeholder="Buscar canal, película o serie..." oninput="venomGlobalSearch(this.value)">
+      <div id="venomGlobalResults" class="venom-global-results">Analiza una cuenta para buscar.</div>
+    </section>
+    <div class="table-wrap"><table class="table table-striped table-bordered mb-0" id="sortTable" width="100%"><thead><tr><th>Estado</th><th class="notranslate" translate="no">Host/Portal</th><th>Usuario/MAC</th><th>Caduca</th><th>Máx. conect.</th><th>Activas</th><th>Libres</th><th>Cat. TV</th><th>Cat. Pelis</th><th>Cat. Series</th><th>Canales</th><th>Tipo panel</th><th>Modo</th><th>Stream ID</th><th>Acceso red</th><th>Avisos</th><th>Acciones</th></tr></thead><tbody></tbody></table></div><div class="mobile-results" id="mobileResults"></div><div class="log-box" id="logBox">Logs:
 </div></div></div>
     </div>
   </div>
@@ -791,6 +853,7 @@
       const id=String(categoryId);
       if(checked)entry[type].add(id);else entry[type].delete(id);
       syncCategorySelection(rowId);
+      clearLoadedTitles(rowId);
     }
     function selectCategoryGroup(rowId,type,checked){
       const entry=categorySelections.get(rowId);
@@ -798,6 +861,7 @@
       entry[type].clear();
       if(checked)for(const item of entry.groups[type]||[])entry[type].add(item.id);
       syncCategorySelection(rowId);
+      clearLoadedTitles(rowId);
     }
     function syncCategorySelection(rowId){
       const entry=categorySelections.get(rowId);
@@ -831,7 +895,7 @@
           const categories=result.categoryGroups?.[type];
           if(!Array.isArray(categories))return `<div><strong>${title}</strong>: No disponible</div>`;
           const items=categories.map(c=>`<label class="venom-category-option"><input type="checkbox" data-venom-row="${sanitizeText(rowId)}" data-venom-type="${type}" data-venom-category="${sanitizeText(c.id)}" onchange="setCategorySelection('${rowId}','${type}',this.dataset.venomCategory,this.checked)"><span>${sanitizeText(c.name)}</span></label>`).join('');
-          return `<section class="venom-category-section"><div class="venom-category-heading"><strong>${title} (${categories.length})</strong><span><button type="button" class="btn btn-mini btn-outline-light" onclick="selectCategoryGroup('${rowId}','${type}',true)">Todas</button> <button type="button" class="btn btn-mini btn-outline-light" onclick="selectCategoryGroup('${rowId}','${type}',false)">Ninguna</button></span></div><div class="venom-category-options">${items||'<span>Sin categorías</span>'}</div></section>`;
+          return `<section class="venom-category-section"><div class="venom-category-heading"><strong>${title} (${categories.length})</strong><span><button type="button" class="btn btn-mini btn-outline-light" onclick="selectCategoryGroup('${rowId}','${type}',true)">Todas</button> <button type="button" class="btn btn-mini btn-outline-light" onclick="selectCategoryGroup('${rowId}','${type}',false)">Ninguna</button></span></div><div class="venom-inline-download"><button type="button" class="btn btn-primary btn-mini" onclick="downloadUnifiedSelection('${rowId}')">⬇ Descargar contenido seleccionado</button></div><div class="venom-category-options">${items||'<span>Sin categorías</span>'}</div></section>`;
         }).join('');
     }
     // Mejora 3: exportar únicamente canales Live de categorías seleccionadas.
@@ -924,13 +988,488 @@
         account.vodExporting=false;
       }
     }
-    function addDesktopRow(result,rowId){const stateBadge=getStateBadge(result.state),detailsHtml=renderCategoryExplorer(result,rowId),panelPill=`<span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>`,networkPill=renderNetworkPill(result.networkHint),actionButton=result.isMacPortal?`<button class="btn btn-sm btn-outline-light btn-mini" disabled>No genera get.php</button>`:`<button class="btn btn-sm btn-outline-light btn-mini" onclick='generateGetForResult(${JSON.stringify(result.rawLink)}, ${JSON.stringify(result.host)}, ${JSON.stringify(result.username)}, ${JSON.stringify(result.state)})'>Generar get.php</button>`;const html=`<tr class="main-row"><td>${stateBadge}</td><td>${sanitizeText(result.host)}</td><td>${sanitizeText(result.username)}</td><td>${sanitizeText(result.expiration)}</td><td>${sanitizeText(result.maxConnections)}</td><td>${sanitizeText(result.activeConnections)}</td><td>${sanitizeText(result.freeConnections)}</td><td>${sanitizeText(result.liveCategories)}</td><td>${sanitizeText(result.vodCategories)}</td><td>${sanitizeText(result.seriesCategories)}</td><td>${sanitizeText(result.liveStreams)}</td><td>${panelPill}</td><td>${sanitizeText(result.detectedMode||"N/D")}</td><td>${sanitizeText(result.streamId||"N/D")}</td><td>${networkPill}</td><td>${renderDiagPills(result.diagnostics)}</td><td><div style="display:flex;gap:6px;align-items:center;"><button id="catbtn-${rowId}" class="btn btn-sm btn-outline-light btn-mini" onclick="toggleCategories('${rowId}')">+</button>${actionButton}</div></td></tr><tr><td colspan="17" style="padding:0;border-top:0;white-space:normal;"><div class="categories-box" id="catbox-${rowId}"><div style="margin-bottom:10px;"><strong>Detalles:</strong></div><div>${detailsHtml}</div><button type="button" class="btn btn-primary btn-mini" onclick="exportSelectedLive('${rowId}')" style="margin-top:12px">Descargar M3U · TV seleccionada</button><button type="button" class="btn btn-outline-light btn-mini" onclick="exportSelectedVod(\'${rowId}\')" style="margin-top:8px">Descargar M3U · Películas seleccionadas</button></div></td></tr>`;document.querySelector("#sortTable tbody").insertAdjacentHTML("beforeend",html)}
-    function addMobileCard(result,rowId){const stateBadge=getStateBadge(result.state),detailsHtml=renderCategoryExplorer(result,rowId),actionButton=result.isMacPortal?`<button class="btn btn-sm btn-outline-light" disabled>No genera get.php</button>`:`<button class="btn btn-sm btn-outline-light" onclick='generateGetForResult(${JSON.stringify(result.rawLink)}, ${JSON.stringify(result.host)}, ${JSON.stringify(result.username)}, ${JSON.stringify(result.state)})'>Generar get.php</button>`;const html=`<div class="result-card"><div class="result-card-top"><div class="result-card-host">${sanitizeText(result.host)}</div><div>${stateBadge}</div></div><div class="result-diag" style="margin-bottom:8px;"><span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>${renderNetworkPill(result.networkHint)}</div><div class="result-diag">${renderDiagPills(result.diagnostics)}</div><div class="result-card-grid"><div class="result-item"><span class="result-item-label">Usuario/MAC</span><span class="result-item-value">${sanitizeText(result.username)}</span></div><div class="result-item"><span class="result-item-label">Caduca</span><span class="result-item-value">${sanitizeText(result.expiration)}</span></div><div class="result-item"><span class="result-item-label">Máx. conect.</span><span class="result-item-value">${sanitizeText(result.maxConnections)}</span></div><div class="result-item"><span class="result-item-label">Activas</span><span class="result-item-value">${sanitizeText(result.activeConnections)}</span></div><div class="result-item"><span class="result-item-label">Libres</span><span class="result-item-value">${sanitizeText(result.freeConnections)}</span></div><div class="result-item"><span class="result-item-label">Cat. TV</span><span class="result-item-value">${sanitizeText(result.liveCategories)}</span></div><div class="result-item"><span class="result-item-label">Cat. Pelis</span><span class="result-item-value">${sanitizeText(result.vodCategories)}</span></div><div class="result-item"><span class="result-item-label">Cat. Series</span><span class="result-item-value">${sanitizeText(result.seriesCategories)}</span></div><div class="result-item"><span class="result-item-label">Canales</span><span class="result-item-value">${sanitizeText(result.liveStreams)}</span></div><div class="result-item"><span class="result-item-label">Modo</span><span class="result-item-value">${sanitizeText(result.detectedMode||"N/D")}</span></div><div class="result-item"><span class="result-item-label">Stream ID</span><span class="result-item-value">${sanitizeText(result.streamId||"N/D")}</span></div></div><div class="result-card-actions">${actionButton}<button id="mcatbtn-${rowId}" class="btn btn-sm btn-outline-light" onclick="toggleMobileCategories('${rowId}')">Ver detalles</button><div class="categories-box" id="mcatbox-${rowId}"><div style="margin-bottom:10px;"><strong>Detalles:</strong></div><div>${detailsHtml}</div><button type="button" class="btn btn-primary btn-mini" onclick="exportSelectedLive('${rowId}')" style="margin-top:12px">Descargar M3U · TV seleccionada</button><button type="button" class="btn btn-outline-light btn-mini" onclick="exportSelectedVod(\'${rowId}\')" style="margin-top:8px">Descargar M3U · Películas seleccionadas</button></div></div></div>`;el.mobileResults.insertAdjacentHTML("beforeend",html)}function addRow(result,rowId){registerCategorySelection(rowId,result);if(!result.isMacPortal){const cfg=buildApiConfig(result.rawLink);exportAccounts.set(rowId,{config:cfg,streams:result.liveStreamEntries||[],categoryNames:new Map((result.categoryGroups?.live||[]).map(c=>[c.id,c.name])),vodCategoryNames:new Map((result.categoryGroups?.vod||[]).map(c=>[c.id,c.name]))})}addDesktopRow(result,rowId);addMobileCard(result,rowId);updateRowCount()}
+    // Mejora 5: convertir series seleccionadas en enlaces de episodios reales.
+    // No se genera ninguna URL a partir del series_id: se usan los id de los episodios.
+    async function exportSelectedSeries(rowId){
+      const selection=categorySelections.get(rowId),account=exportAccounts.get(rowId);
+      if(!selection||!account){setStatus("No se encontraron datos de esta cuenta.");return;}
+      const selected=new Set(selection.series);
+      if(!selected.size){setStatus("Marca al menos una categoría de Series.");return;}
+      if(account.seriesExporting){setStatus("Ya se está preparando una lista de series.");return;}
+      account.seriesExporting=true;
+      const runId=currentRunId,cfg=account.config;
+      const isCurrent=()=>runId===currentRunId&&exportAccounts.get(rowId)===account;
+      const endpoint=new URL('player_api.php',cfg.apiBase);
+      endpoint.searchParams.set('username',cfg.username);
+      endpoint.searchParams.set('password',cfg.password);
+      try{
+        setStatus('Consultando las series de las categorías seleccionadas...');
+        const seriesById=new Map();
+        for(const categoryId of selected){
+          if(!/^\d+$/.test(categoryId))continue;
+          endpoint.searchParams.set('action','get_series');
+          endpoint.searchParams.set('category_id',categoryId);
+          const response=await axios.get(endpoint.toString(),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true});
+          if(!isCurrent())return;
+          if(response.status!==200||!Array.isArray(response.data))throw new Error(`Consulta de series no compatible (HTTP ${response.status})`);
+          for(const series of response.data){
+            const id=String(series.series_id??'');
+            if(!/^\d+$/.test(id)||String(series.category_id??categoryId)!==categoryId)continue;
+            if(!seriesById.has(id))seriesById.set(id,{...series,selectedCategory:categoryId});
+          }
+        }
+        if(!seriesById.size){setStatus('No hay series en las categorías seleccionadas.');return;}
+        const lines=['#EXTM3U'];
+        const seenEpisodes=new Set();
+        let seriesDone=0;
+        for(const series of seriesById.values()){
+          if(!isCurrent())return;
+          setStatus(`Leyendo episodios: ${++seriesDone}/${seriesById.size}`);
+          endpoint.searchParams.set('action','get_series_info');
+          endpoint.searchParams.delete('category_id');
+          endpoint.searchParams.set('series_id',String(series.series_id));
+          const response=await axios.get(endpoint.toString(),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true});
+          if(!isCurrent())return;
+          if(response.status!==200||!response.data||typeof response.data!=='object'||Array.isArray(response.data)){
+            throw new Error(`No se pudo consultar la serie ${series.series_id} (HTTP ${response.status})`);
+          }
+          const episodes=response.data.episodes;
+          if(!episodes||typeof episodes!=='object'||Array.isArray(episodes)){
+            throw new Error(`El servidor no devolvió episodios de la serie ${series.series_id}`);
+          }
+          const seriesName=String(series.name||`Serie ${series.series_id}`).replace(/[\r\n]+/g,' ').trim();
+          const group=account.seriesCategoryNames.get(String(series.selectedCategory))||'Series';
+          const logo=escapeM3uAttribute(series.cover||response.data.info?.cover||'');
+          for(const [season,records] of Object.entries(episodes)){
+            if(!Array.isArray(records))continue;
+            for(const episode of records){
+              const episodeId=String(episode.id??'');
+              if(!/^\d+$/.test(episodeId)||seenEpisodes.has(episodeId))continue;
+              seenEpisodes.add(episodeId);
+              const extension=String(episode.container_extension||'mp4').toLowerCase();
+              const safeExtension=/^(mp4|mkv|avi|mov|wmv|m4v|ts)$/.test(extension)?extension:'mp4';
+              const seasonNumber=Number(episode.season??season);
+              const epNumber=Number(episode.episode_num??episode.episode_number??0);
+              const se=Number.isInteger(seasonNumber)&&seasonNumber>=0?`S${String(seasonNumber).padStart(2,'0')}`:'Temporada';
+              const ep=Number.isInteger(epNumber)&&epNumber>0?`E${String(epNumber).padStart(2,'0')}`:'Episodio';
+              const title=String(episode.title||`${seriesName} ${se}${ep}`).replace(/[\r\n]+/g,' ').trim();
+              const playUrl=`${cfg.apiBase}series/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.password)}/${episodeId}.${safeExtension}`;
+              lines.push(`#EXTINF:-1 tvg-logo="${logo}" group-title="${escapeM3uAttribute(group)}",${title}`);
+              lines.push(playUrl);
+            }
+          }
+        }
+        if(!isCurrent())return;
+        if(lines.length===1){setStatus('No hay episodios exportables en las categorías elegidas.');return;}
+        const filename=`venom_series_${sanitizeFilenamePart(cfg.host)}_${sanitizeFilenamePart(cfg.username)}.m3u`;
+        const blob=new Blob([lines.join('\n')+'\n'],{type:'audio/x-mpegurl;charset=utf-8'});
+        const blobUrl=URL.createObjectURL(blob),link=document.createElement('a');
+        link.href=blobUrl;link.download=filename;document.body.appendChild(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(blobUrl),3000);
+        setStatus(`M3U de series generada: ${Math.floor((lines.length-1)/2)} episodios.`);
+      }catch(err){
+        if(isCurrent())setStatus(`No se pudo exportar Series: ${normalizeAxiosError(err)}`);
+      }finally{account.seriesExporting=false;}
+    }
+
+    // Selección de títulos individuales. Independiente de los filtros por categoría.
+    const titlePickers=new Map();
+
+    function venomGlobalSearch(value){
+      const output=document.getElementById("venomGlobalResults");
+      if(!output)return;
+      const query=String(value||"").trim().toLocaleLowerCase();
+      output.replaceChildren();
+      if(query.length<2){output.textContent="Escribe al menos 2 caracteres para buscar.";return;}
+      const matches=[];
+      for(const [rowId,account] of exportAccounts){
+        const host=account.config.host;
+        for(const stream of account.streams||[]){
+          if(String(stream.name||"").toLocaleLowerCase().includes(query))
+            matches.push({rowId,host,type:"Canal",name:String(stream.name||"")});
+          if(matches.length>=160)break;
+        }
+        const picker=titlePickers.get(rowId);
+        if(picker?.loaded){
+          for(const item of picker.vod){
+            if(String(item.name||"").toLocaleLowerCase().includes(query))
+              matches.push({rowId,host,type:"Película",name:String(item.name||""),id:String(item.stream_id),kind:"vod"});
+            if(matches.length>=160)break;
+          }
+          for(const item of picker.series){
+            if(String(item.name||"").toLocaleLowerCase().includes(query))
+              matches.push({rowId,host,type:"Serie",name:String(item.name||""),id:String(item.series_id),kind:"series"});
+            if(matches.length>=160)break;
+          }
+        }
+        if(matches.length>=160)break;
+      }
+      if(!matches.length){output.textContent="No hay coincidencias en los datos cargados. Para buscar películas o series, primero carga sus categorías.";return;}
+      const summary=document.createElement("p");
+      summary.textContent=`${matches.length} coincidencias${matches.length===160?" (límite de vista)":""}`;
+      output.append(summary);
+      for(const match of matches.slice(0,100)){
+        const row=document.createElement("div");
+        row.className="venom-global-hit";
+        const info=document.createElement("span");
+        info.textContent=`${match.type} · ${match.name} · ${match.host}`;
+        const btn=document.createElement("button");
+        btn.type="button";btn.className="btn btn-mini btn-outline-light";
+        btn.textContent=match.kind?"Seleccionar":"Ver cuenta";
+        btn.onclick=()=>{
+          if(match.kind){
+            const picker=titlePickers.get(match.rowId);
+            if(picker){
+              const selection=match.kind==="vod"?picker.selectedVod:picker.selectedSeries;
+              selection.add(match.id);
+              picker.query="";
+              updateTitlePicker(match.rowId);
+            }
+          }
+          const card=document.querySelector("#mobileResults .result-card[data-search-row='"+match.rowId+"']");
+          if(card){
+            const details=card.querySelector(".categories-box");
+            if(details&&!details.classList.contains("show"))toggleMobileCategories(match.rowId);
+            card.scrollIntoView({behavior:"smooth",block:"center"});
+          }
+        };
+        row.append(info,btn);output.append(row);
+      }
+    }
+    function titlePickerState(rowId){
+      if(!titlePickers.has(rowId))titlePickers.set(rowId,{
+        vod:[],series:[],selectedVod:new Set(),selectedSeries:new Set(),loaded:false,busy:false,exporting:false,query:""
+      });
+      return titlePickers.get(rowId);
+    }
+    function titleApiUrl(cfg,action,extra={}){
+      const url=new URL("player_api.php",cfg.apiBase);
+      url.searchParams.set("username",cfg.username);
+      url.searchParams.set("password",cfg.password);
+      url.searchParams.set("action",action);
+      for(const [key,value] of Object.entries(extra))url.searchParams.set(key,String(value));
+      return url.toString();
+    }
+    function updateTitlePicker(rowId){
+      const state=titlePickers.get(rowId);
+      if(!state)return;
+      const q=state.query.toLocaleLowerCase();
+      const categories=categorySelections.get(rowId);
+      const renderList=(kind,items,selected)=>{
+        const categoryFilter=categories?.[kind];
+        const filtered=items.filter(item=>
+          (categoryFilter?.has(String(item.category_id??""))??false) &&
+          String(item.name||"").toLocaleLowerCase().includes(q)
+        );
+        const html=filtered.slice(0,120).map(item=>{
+          const id=String(kind==="vod"?item.stream_id:item.series_id);
+          const checked=selected.has(id)?"checked":"";
+          return `<label class="venom-title-option"><input type="checkbox" ${checked} data-title-kind="${kind}" data-title-id="${sanitizeText(id)}" onchange="toggleSelectedTitle('${rowId}','${kind}',this.dataset.titleId,this.checked)"><span>${sanitizeText(item.name||"Sin título")}</span></label>`;
+        }).join("");
+        return `<div class="venom-title-heading">${kind==="vod"?"🎬 Películas":"📚 Series"} · ${filtered.length} resultados · ${selected.size} marcadas</div>
+          <div class="venom-title-list">${html||"<span>Sin resultados</span>"}</div>
+          ${filtered.length>120?'<small>Mostrando los primeros 120 resultados. Usa la búsqueda para filtrar.</small>':""}`;
+      };
+      document.querySelectorAll("[data-title-panel]").forEach(node=>{
+        if(node.dataset.titlePanel!==rowId)return;
+        const lists=node.querySelector("[data-title-lists]");
+        if(lists)lists.innerHTML=renderList("vod",state.vod,state.selectedVod)+renderList("series",state.series,state.selectedSeries);
+        const total=node.querySelector("[data-title-total]");
+        if(total)total.textContent=String(state.selectedVod.size+state.selectedSeries.size);
+      });
+    }
+    function toggleSelectedTitle(rowId,kind,id,checked){
+      const state=titlePickers.get(rowId);
+      if(!state||!["vod","series"].includes(kind))return;
+      const allowed=state[kind].some(item=>String(kind==="vod"?item.stream_id:item.series_id)===String(id));
+      if(!allowed)return;
+      const target=kind==="vod"?state.selectedVod:state.selectedSeries;
+      if(checked)target.add(String(id));else target.delete(String(id));
+      updateTitlePicker(rowId);
+      updateDownloadManager(rowId);
+    }
+    function filterTitles(rowId,text){
+      const state=titlePickers.get(rowId);
+      if(!state)return;
+      state.query=String(text).slice(0,150);
+      updateTitlePicker(rowId);
+    }
+    function clearLoadedTitles(rowId){
+      const state=titlePickerState(rowId);
+      state.requestToken=(state.requestToken||0)+1;
+      state.vod=[];state.series=[];
+      state.selectedVod.clear();state.selectedSeries.clear();
+      state.loaded=false;state.busy=false;state.query="";
+      document.querySelectorAll("[data-title-panel]").forEach(panel=>{
+        if(panel.dataset.titlePanel!==rowId)return;
+        const input=panel.querySelector(".venom-title-search");
+        if(input)input.value="";
+        const loading=panel.querySelector("[data-title-loading]");
+        if(loading)loading.hidden=true;
+        const btn=panel.querySelector("[data-title-load-button]");
+        if(btn){btn.disabled=false;btn.textContent="Cargar películas y series";}
+        const lists=panel.querySelector("[data-title-lists]");
+        if(lists)lists.innerHTML="";
+        const total=panel.querySelector("[data-title-total]");
+        if(total)total.textContent="0";
+      });
+    }
+    function resetAndReloadTitles(rowId){
+      const state=titlePickerState(rowId);
+      if(state.exporting){setStatus("Espera a que termine la exportación.");return;}
+      clearLoadedTitles(rowId);
+      loadIndividualTitles(rowId);
+    }
+    async function loadIndividualTitles(rowId){
+      const account=exportAccounts.get(rowId);
+      if(!account)return setStatus("Esta cuenta no admite la consulta de títulos.");
+      const state=titlePickerState(rowId);
+      if(state.exporting)return setStatus("Espera a que termine la exportación.");
+      // Cada carga sustituye por completo el catálogo y la selección anteriores.
+      clearLoadedTitles(rowId);
+      const selected=categorySelections.get(rowId);
+      const vodIds=new Set(selected?.vod||[]),seriesIds=new Set(selected?.series||[]);
+      if(!vodIds.size&&!seriesIds.size){
+        setStatus("Sin categorías seleccionadas: catálogo vacío. Marca una categoría para cargar.");
+        return;
+      }
+      state.busy=true;
+      const token=state.requestToken,run=currentRunId;
+      const valid=()=>run===currentRunId&&exportAccounts.get(rowId)===account&&state.requestToken===token;
+      document.querySelectorAll("[data-title-panel]").forEach(panel=>{
+        if(panel.dataset.titlePanel!==rowId)return;
+        const indicator=panel.querySelector("[data-title-loading]");
+        if(indicator)indicator.hidden=false;
+        const btn=panel.querySelector("[data-title-load-button]");
+        if(btn){btn.disabled=true;btn.textContent="Cargando categorías...";}
+      });
+      try{
+        setStatus("Cargando únicamente las categorías seleccionadas...");
+        const cfg=account.config;
+        // Se consulta cada catálogo solicitado y se filtra localmente por category_id.
+        // Esto funciona incluso si el servidor ignora category_id en sus endpoints.
+        const [vodResponse,seriesResponse]=await Promise.all([
+          vodIds.size?axios.get(titleApiUrl(cfg,"get_vod_streams"),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true}):Promise.resolve(null),
+          seriesIds.size?axios.get(titleApiUrl(cfg,"get_series"),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true}):Promise.resolve(null)
+        ]);
+        if(!valid())return;
+        if((vodResponse&&(vodResponse.status!==200||!Array.isArray(vodResponse.data)))||
+           (seriesResponse&&(seriesResponse.status!==200||!Array.isArray(seriesResponse.data))))
+          throw new Error("El servidor no devolvió un catálogo compatible");
+        state.vod=(vodResponse?.data||[]).filter(v=>/^\d+$/.test(String(v.stream_id??""))&&vodIds.has(String(v.category_id??"")));
+        state.series=(seriesResponse?.data||[]).filter(v=>/^\d+$/.test(String(v.series_id??""))&&seriesIds.has(String(v.category_id??"")));
+        state.loaded=true;
+        updateTitlePicker(rowId);
+        setStatus(`Categorías cargadas: ${state.vod.length} películas y ${state.series.length} series.`);
+      }catch(error){if(valid())setStatus(`No se pudo cargar el catálogo: ${normalizeAxiosError(error)}`);}
+      finally{
+        if(valid()){
+          state.busy=false;
+          document.querySelectorAll("[data-title-panel]").forEach(panel=>{
+            if(panel.dataset.titlePanel!==rowId)return;
+            const indicator=panel.querySelector("[data-title-loading]");
+            if(indicator)indicator.hidden=true;
+            const btn=panel.querySelector("[data-title-load-button]");
+            if(btn){btn.disabled=false;btn.textContent="Cargar películas y series";}
+          });
+        }
+      }
+    }
+    function titlePickerMarkup(rowId,isMacPortal){
+      if(isMacPortal)return "";
+      return `<section class="venom-individual-picker" data-title-panel="${rowId}">
+        <h4 style="font-size:1rem">🎯 Descargar títulos concretos</h4>
+        <p style="color:var(--muted);font-size:.85rem">Marca primero las categorías que quieras consultar. Después selecciona títulos concretos por nombre.</p>
+        <div class="venom-picker-toolbar">
+          <button type="button" class="btn btn-outline-light btn-mini" data-title-load-button onclick="loadIndividualTitles('${rowId}')">Cargar películas y series</button>
+          <button type="button" class="btn btn-outline-light btn-mini" onclick="resetAndReloadTitles('${rowId}')">Limpiar y volver a cargar</button>
+        </div>
+        <div class="venom-loading-row" data-title-loading hidden role="status" aria-live="polite">
+          <div class="venom-loading-track"><div class="venom-loading-moving"></div></div>
+          <small>Consultando películas y series... La barra indica actividad, no un porcentaje.</small>
+        </div>
+        <input type="search" class="form-control venom-title-search" placeholder="Buscar película o serie..." oninput="filterTitles('${rowId}',this.value)">
+        <div data-title-lists></div>
+        <div class="venom-download-summary" data-download-summary>Seleccionadas: 0 películas y 0 series. Descarga una lista M3U, no los vídeos.</div><div class="venom-export-progress" data-export-progress hidden><div class="venom-export-bar" data-export-bar></div><small data-export-label>Preparando exportación...</small></div><button type="button" class="btn btn-primary btn-mini" style="margin-top:12px" onclick="downloadUnifiedSelection('${rowId}')">Descargar contenido seleccionado (<span data-title-total>0</span>)</button>
+        <p style="color:var(--muted);font-size:.75rem;margin-top:8px">Se descarga un archivo M3U, no el vídeo original. Cambiar categorías vacía los resultados anteriores. Si no hay categorías marcadas, el catálogo permanece vacío.</p>
+      </section>`;
+    }
+
+    function updateDownloadManager(rowId){
+      const picker=titlePickers.get(rowId),account=exportAccounts.get(rowId);
+      if(!picker||!account)return;
+      const movies=picker.selectedVod.size,series=picker.selectedSeries.size;
+      document.querySelectorAll('[data-title-panel="'+rowId+'"]').forEach(panel=>{
+        const count=panel.querySelector("[data-download-summary]");
+        if(count)count.textContent=`Seleccionadas: ${movies} películas y ${series} series. Se generará un archivo M3U con enlaces, no se descargarán vídeos.`;
+      });
+    }
+    async function downloadChosenTitles(rowId){
+      const account=exportAccounts.get(rowId),state=titlePickers.get(rowId);
+      if(!account||!state||!state.loaded)return setStatus("Primero carga los títulos.");
+      if(state.exporting)return;
+      if(!state.selectedVod.size&&!state.selectedSeries.size)return setStatus("Marca al menos una película o serie.");
+      state.exporting=true;
+      document.querySelectorAll('[data-title-panel="'+rowId+'"]').forEach(panel=>{
+        const progress=panel.querySelector("[data-export-progress]");
+        if(progress)progress.hidden=false;
+      });
+      const run=currentRunId,cfg=account.config;
+      const isCurrent=()=>run===currentRunId&&exportAccounts.get(rowId)===account;
+      const lines=["#EXTM3U"];
+      try{
+        for(const movie of state.vod){
+          if(!state.selectedVod.has(String(movie.stream_id)))continue;
+          const id=String(movie.stream_id);
+          const ext=String(movie.container_extension||"mp4").toLowerCase();
+          const safeExt=/^(mp4|mkv|avi|mov|wmv|m4v|ts)$/.test(ext)?ext:"mp4";
+          const url=`${cfg.apiBase}movie/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.password)}/${id}.${safeExt}`;
+          lines.push(`#EXTINF:-1 tvg-logo="${escapeM3uAttribute(movie.stream_icon||"")}" group-title="Películas",${String(movie.name||"Película "+id).replace(/[\r\n]/g," ")}`,url);
+        }
+        const chosen=state.series.filter(s=>state.selectedSeries.has(String(s.series_id)));
+        for(let index=0;index<chosen.length;index++){
+          const series=chosen[index];
+          setStatus(`Obteniendo episodios ${index+1}/${chosen.length}: ${series.name||series.series_id}`);
+          document.querySelectorAll('[data-title-panel="'+rowId+'"]').forEach(panel=>{
+            const bar=panel.querySelector("[data-export-bar]"),label=panel.querySelector("[data-export-label]");
+            if(bar)bar.style.width=`${Math.round(index/chosen.length*100)}%`;
+            if(label)label.textContent=`Consultando episodios de series: ${index+1}/${chosen.length}`;
+          });
+          const response=await axios.get(titleApiUrl(cfg,"get_series_info",{series_id:series.series_id}),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true});
+          if(!isCurrent())return;
+          if(response.status!==200||!response.data?.episodes||typeof response.data.episodes!=="object")
+            throw new Error(`No se pudieron consultar los episodios de ${series.name||series.series_id}`);
+          for(const [season,episodes] of Object.entries(response.data.episodes)){
+            if(!Array.isArray(episodes))continue;
+            for(const episode of episodes){
+              const id=String(episode.id??"");
+              if(!/^\d+$/.test(id))continue;
+              const ext=String(episode.container_extension||"mp4").toLowerCase();
+              const safeExt=/^(mp4|mkv|avi|mov|wmv|m4v|ts)$/.test(ext)?ext:"mp4";
+              const epNum=String(episode.episode_num??episode.episode_number??"").padStart(2,"0");
+              const title=`${series.name||"Serie"} - T${season} E${epNum} - ${episode.title||""}`.replace(/[\r\n]/g," ");
+              const url=`${cfg.apiBase}series/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.password)}/${id}.${safeExt}`;
+              lines.push(`#EXTINF:-1 tvg-logo="${escapeM3uAttribute(series.cover||"")}" group-title="Series",${title}`,url);
+            }
+          }
+        }
+        if(!isCurrent())return;
+        if(lines.length===1)return setStatus("No se encontraron contenidos exportables.");
+        const blob=new Blob([lines.join("\n")+"\n"],{type:"audio/x-mpegurl;charset=utf-8"});
+        const link=document.createElement("a"),blobUrl=URL.createObjectURL(blob);
+        link.href=blobUrl;link.download=`venom_seleccion_${sanitizeFilenamePart(cfg.host)}.m3u`;
+        document.body.appendChild(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(blobUrl),3000);
+        setStatus(`Descargada lista M3U con ${(lines.length-1)/2} entradas.`);
+      }catch(error){if(isCurrent())setStatus(`Error al exportar selección: ${normalizeAxiosError(error)}`);}
+      finally{
+        state.exporting=false;
+        document.querySelectorAll('[data-title-panel="'+rowId+'"]').forEach(panel=>{
+          const progress=panel.querySelector("[data-export-progress]");
+          if(progress)progress.hidden=true;
+        });
+      }
+    }
+
+    const unifiedBusy=new Set();
+    async function downloadUnifiedSelection(rowId){
+      const cfgEntry=exportAccounts.get(rowId),chosen=categorySelections.get(rowId),picker=titlePickers.get(rowId);
+      if(!cfgEntry||!chosen)return setStatus("Cuenta no disponible.");
+      if(unifiedBusy.has(rowId))return;
+      const preciseVod=!!picker?.selectedVod.size,preciseSeries=!!picker?.selectedSeries.size;
+      if(!chosen.live.size&&!chosen.vod.size&&!chosen.series.size&&!preciseVod&&!preciseSeries)
+        return setStatus("Selecciona categorías o títulos antes de descargar.");
+      const cfg=cfgEntry.config,run=currentRunId,lines=["#EXTM3U"],added=new Set();
+      const current=()=>run===currentRunId&&exportAccounts.get(rowId)===cfgEntry;
+      const extension=x=>/^(mp4|mkv|avi|mov|wmv|m4v|ts)$/.test(String(x||"mp4").toLowerCase())?String(x||"mp4").toLowerCase():"mp4";
+      function push(kind,id,name,logo,group,ext,epg=""){
+        id=String(id??"");
+        if(!/^\d+$/.test(id)||added.has(kind+":"+id))return;
+        added.add(kind+":"+id);
+        lines.push(`#EXTINF:-1 tvg-id="${escapeM3uAttribute(epg)}" tvg-logo="${escapeM3uAttribute(logo)}" group-title="${escapeM3uAttribute(group)}",${String(name||"Sin título").replace(/[\r\n]/g," ")}`);
+        lines.push(`${cfg.apiBase}${kind}/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.password)}/${id}.${ext}`);
+      }
+      async function fetchList(action,categoryId){
+        const response=await axios.get(titleApiUrl(cfg,action,{category_id:categoryId}),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true});
+        if(!current())throw Error("Análisis actualizado, vuelve a intentar.");
+        if(response.status!==200||!Array.isArray(response.data))throw Error(`Consulta ${action} fallida.`);
+        return response.data.filter(item=>String(item.category_id??categoryId)===String(categoryId));
+      }
+      unifiedBusy.add(rowId);
+      const progressNodes=[...document.querySelectorAll(`[data-title-panel="${rowId}"] [data-export-progress]`)];
+      progressNodes.forEach(el=>el.hidden=false);
+      try{
+        setStatus("Preparando lista M3U seleccionada...");
+        for(const stream of cfgEntry.streams){
+          if(!chosen.live.has(String(stream.category_id??"")))continue;
+          push("live",stream.stream_id,stream.name,stream.stream_icon,cfgEntry.categoryNames.get(String(stream.category_id))||"TV","ts",stream.epg_channel_id);
+        }
+        let movies=[];
+        if(preciseVod)movies=picker.vod.filter(item=>picker.selectedVod.has(String(item.stream_id)));
+        else for(const id of chosen.vod){if(/^\d+$/.test(id))movies.push(...await fetchList("get_vod_streams",id));}
+        for(const movie of movies){
+          push("movie",movie.stream_id,movie.name,movie.stream_icon,cfgEntry.vodCategoryNames.get(String(movie.category_id))||"Películas",extension(movie.container_extension));
+        }
+        let series=[];
+        if(preciseSeries)series=picker.series.filter(item=>picker.selectedSeries.has(String(item.series_id)));
+        else for(const id of chosen.series){if(/^\d+$/.test(id))series.push(...await fetchList("get_series",id));}
+        series=[...new Map(series.filter(item=>/^\d+$/.test(String(item.series_id??""))).map(item=>[String(item.series_id),item])).values()];
+        for(let i=0;i<series.length;i++){
+          const item=series[i];
+          setStatus(`Consultando episodios ${i+1}/${series.length}`);
+          const response=await axios.get(titleApiUrl(cfg,"get_series_info",{series_id:item.series_id}),{timeout:REQUEST_TIMEOUT,validateStatus:()=>true});
+          if(!current())return;
+          if(response.status!==200||!response.data?.episodes)throw Error("No se pudieron obtener episodios.");
+          for(const [season,episodes] of Object.entries(response.data.episodes)){
+            if(!Array.isArray(episodes))continue;
+            for(const episode of episodes)push("series",episode.id,`${item.name} · T${season} E${episode.episode_num||""} · ${episode.title||""}`,item.cover,"Series",extension(episode.container_extension));
+          }
+        }
+        if(!current())return;
+        if(lines.length===1)return setStatus("No hay contenido válido para exportar.");
+        const blob=new Blob([lines.join("\n")+"\n"],{type:"audio/x-mpegurl;charset=utf-8"});
+        const uri=URL.createObjectURL(blob),link=document.createElement("a");
+        link.href=uri;link.download=`venom_seleccion_${sanitizeFilenamePart(cfg.host)}.m3u`;
+        document.body.append(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(uri),3000);
+        setStatus(`Exportados ${(lines.length-1)/2} elementos en un único M3U.`);
+      }catch(error){if(current())setStatus(`Error de exportación: ${normalizeAxiosError(error)}`);}
+      finally{unifiedBusy.delete(rowId);progressNodes.forEach(el=>el.hidden=true);}
+    }
+    function addDesktopRow(result,rowId){const stateBadge=getStateBadge(result.state),detailsHtml=renderCategoryExplorer(result,rowId),panelPill=`<span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>`,networkPill=renderNetworkPill(result.networkHint),actionButton=result.isMacPortal?`<button class="btn btn-sm btn-outline-light btn-mini" disabled>No genera get.php</button>`:`<button class="btn btn-sm btn-outline-light btn-mini" onclick='generateGetForResult(${JSON.stringify(result.rawLink)}, ${JSON.stringify(result.host)}, ${JSON.stringify(result.username)}, ${JSON.stringify(result.state)})'>Generar get.php</button>`;const html=`<tr class="main-row"><td>${stateBadge}</td><td>${sanitizeText(result.host)}</td><td>${sanitizeText(result.username)}</td><td>${sanitizeText(result.expiration)}</td><td>${sanitizeText(result.maxConnections)}</td><td>${sanitizeText(result.activeConnections)}</td><td>${sanitizeText(result.freeConnections)}</td><td>${sanitizeText(result.liveCategories)}</td><td>${sanitizeText(result.vodCategories)}</td><td>${sanitizeText(result.seriesCategories)}</td><td>${sanitizeText(result.liveStreams)}</td><td>${panelPill}</td><td>${sanitizeText(result.detectedMode||"N/D")}</td><td>${sanitizeText(result.streamId||"N/D")}</td><td>${networkPill}</td><td>${renderDiagPills(result.diagnostics)}</td><td><div style="display:flex;gap:6px;align-items:center;"><button id="catbtn-${rowId}" class="btn btn-sm btn-outline-light btn-mini" onclick="toggleCategories('${rowId}')">+</button>${actionButton}</div></td></tr><tr><td colspan="17" style="padding:0;border-top:0;white-space:normal;"><div class="categories-box" id="catbox-${rowId}"><div style="margin-bottom:10px;"><strong>Detalles:</strong></div><div>${detailsHtml}</div>${titlePickerMarkup(rowId,result.isMacPortal)}<button type="button" class="btn btn-outline-light btn-mini venom-close-bottom" onclick="toggleCategories('${rowId}')">↑ Ocultar contenido</button></div></td></tr>`;document.querySelector("#sortTable tbody").insertAdjacentHTML("beforeend",html)}
+    function addMobileCard(result,rowId){const stateBadge=getStateBadge(result.state),detailsHtml=renderCategoryExplorer(result,rowId),actionButton=result.isMacPortal?`<button class="btn btn-sm btn-outline-light" disabled>No genera get.php</button>`:`<button class="btn btn-sm btn-outline-light" onclick='generateGetForResult(${JSON.stringify(result.rawLink)}, ${JSON.stringify(result.host)}, ${JSON.stringify(result.username)}, ${JSON.stringify(result.state)})'>Generar get.php</button>`;const html=`<div class="result-card" data-search-row="${rowId}"><div class="result-card-top"><div class="result-card-host">${sanitizeText(result.host)}</div><div>${stateBadge}</div></div><div class="result-diag" style="margin-bottom:8px;"><span class="diag-pill diag-${result.panelType.level}">${sanitizeText(result.panelType.label)}</span>${renderNetworkPill(result.networkHint)}</div><div class="result-diag">${renderDiagPills(result.diagnostics)}</div><div class="result-card-grid"><div class="result-item"><span class="result-item-label">Usuario/MAC</span><span class="result-item-value">${sanitizeText(result.username)}</span></div><div class="result-item"><span class="result-item-label">Caduca</span><span class="result-item-value">${sanitizeText(result.expiration)}</span></div><div class="result-item"><span class="result-item-label">Máx. conect.</span><span class="result-item-value">${sanitizeText(result.maxConnections)}</span></div><div class="result-item"><span class="result-item-label">Activas</span><span class="result-item-value">${sanitizeText(result.activeConnections)}</span></div><div class="result-item"><span class="result-item-label">Libres</span><span class="result-item-value">${sanitizeText(result.freeConnections)}</span></div><div class="result-item"><span class="result-item-label">Cat. TV</span><span class="result-item-value">${sanitizeText(result.liveCategories)}</span></div><div class="result-item"><span class="result-item-label">Cat. Pelis</span><span class="result-item-value">${sanitizeText(result.vodCategories)}</span></div><div class="result-item"><span class="result-item-label">Cat. Series</span><span class="result-item-value">${sanitizeText(result.seriesCategories)}</span></div><div class="result-item"><span class="result-item-label">Canales</span><span class="result-item-value">${sanitizeText(result.liveStreams)}</span></div><div class="result-item"><span class="result-item-label">Modo</span><span class="result-item-value">${sanitizeText(result.detectedMode||"N/D")}</span></div><div class="result-item"><span class="result-item-label">Stream ID</span><span class="result-item-value">${sanitizeText(result.streamId||"N/D")}</span></div></div><div class="result-card-actions">${actionButton}<button id="mcatbtn-${rowId}" class="btn btn-sm btn-outline-light" onclick="toggleMobileCategories('${rowId}')">Ver detalles</button><div class="categories-box" id="mcatbox-${rowId}"><div style="margin-bottom:10px;"><strong>Detalles:</strong></div><div>${detailsHtml}</div>${titlePickerMarkup(rowId,result.isMacPortal)}<button type="button" class="btn btn-outline-light btn-mini venom-close-bottom" onclick="toggleMobileCategories('${rowId}')">↑ Ocultar contenido</button></div></div></div>`;el.mobileResults.insertAdjacentHTML("beforeend",html)}function addRow(result,rowId){registerCategorySelection(rowId,result);if(!result.isMacPortal){const cfg=buildApiConfig(result.rawLink);exportAccounts.set(rowId,{config:cfg,streams:result.liveStreamEntries||[],categoryNames:new Map((result.categoryGroups?.live||[]).map(c=>[c.id,c.name])),vodCategoryNames:new Map((result.categoryGroups?.vod||[]).map(c=>[c.id,c.name])),seriesCategoryNames:new Map((result.categoryGroups?.series||[]).map(c=>[c.id,c.name]))})}addDesktopRow(result,rowId);addMobileCard(result,rowId);updateRowCount()}
     function normalizeAxiosError(err){if(err instanceof Error&&err.message)return err.message;if(err?.response?.status)return`HTTP ${err.response.status}`;if(err?.request&&!err?.response)return"Sin respuesta / timeout / bloqueo";if(err?.code)return`${err.code} - ${err.message||"Error de red"}`;if(err?.message)return err.message;return"Error desconocido"}async function axiosGetWithRetry(url,options={},retries=1){try{return await axios.get(url,options)}catch(err){if(retries>0)return await axiosGetWithRetry(url,options,retries-1);throw err}}
     async function fetchAccountData(inputUrl){const headers={"User-Agent":"Mozilla/5.0"},cfg=buildApiConfig(inputUrl),panelType=detectPanelType(inputUrl);log(`URL original: ${inputUrl}`);log(`Modo detectado: ${cfg.detectedMode}`);log(`Username detectado: ${cfg.username}`);log(`Password detectada: ${cfg.password}`);if(cfg.streamId)log(`Stream ID detectado: ${cfg.streamId}`);log(`Probando player_api.php: ${cfg.playerApiUrl}`);let infoResponse,liveCategoriesResponse,vodResponse,seriesResponse,streamsResponse;try{infoResponse=await axiosGetWithRetry(cfg.playerApiUrl,{headers,timeout:REQUEST_TIMEOUT,validateStatus:()=>true},1)}catch(err){const diag=diagnoseApiFailure(err,cfg);throw new Error(`${diag.short}: ${diag.detail}`)}if(infoResponse.status===404)throw new Error("HTTP 404 - player_api.php no existe en esa ruta");if(infoResponse.status===403)throw new Error("HTTP 403 - acceso denegado por el panel");if(infoResponse.status===401)throw new Error("HTTP 401 - no autorizado");if(infoResponse.status>=400)throw new Error(`HTTP ${infoResponse.status} en player_api.php`);try{liveCategoriesResponse=await axiosGetWithRetry(`${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_categories`,{headers,timeout:REQUEST_TIMEOUT,validateStatus:()=>true},1);vodResponse=await axiosGetWithRetry(`${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_vod_categories`,{headers,timeout:REQUEST_TIMEOUT,validateStatus:()=>true},1);seriesResponse=await axiosGetWithRetry(`${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_series_categories`,{headers,timeout:REQUEST_TIMEOUT,validateStatus:()=>true},1);streamsResponse=await axiosGetWithRetry(`${cfg.apiBase}player_api.php?username=${encodeURIComponent(cfg.username)}&password=${encodeURIComponent(cfg.password)}&action=get_live_streams`,{headers,timeout:REQUEST_TIMEOUT,validateStatus:()=>true},1)}catch(err){throw new Error(`Error al consultar categorías/canales: ${err.message}`)}const info=infoResponse.data||{},liveCategoriesRaw=Array.isArray(liveCategoriesResponse.data)?liveCategoriesResponse.data:[],vodCategoriesRaw=Array.isArray(vodResponse.data)?vodResponse.data:[],seriesCategoriesRaw=Array.isArray(seriesResponse.data)?seriesResponse.data:[],streamsRaw=Array.isArray(streamsResponse.data)?streamsResponse.data:[],serverInfo=info.server_info||{},userInfo=info.user_info||{};if(!userInfo||Object.keys(userInfo).length===0)throw new Error("Respuesta Xtream no compatible o panel sin datos de usuario");const responseHeaders=infoResponse.headers||{},liveCategories=liveCategoriesRaw.map(c=>String(c.category_name||"").trim()).filter(Boolean),state=getAccountState(userInfo.exp_date||null),networkHint=detectNetworkRestriction(infoResponse.status,liveCategoriesResponse.status,vodResponse.status,seriesResponse.status,streamsResponse.status,streamsRaw.length),diagnostics={proxy:classifyProxyStatus(inputUrl,responseHeaders,false),protection:classifyProtection(responseHeaders),channels:classifyChannelHealth(streamsRaw.length)};return{state,host:`${serverInfo.url||new URL(inputUrl).hostname}:${serverInfo.port||new URL(inputUrl).port||"80"}`,username:userInfo.username||cfg.username,expiration:formatUnixDate(userInfo.exp_date||null),maxConnections:Number(userInfo.max_connections||0),activeConnections:Number(userInfo.active_cons||0),freeConnections:Math.max(0,Number(userInfo.max_connections||0)-Number(userInfo.active_cons||0)),liveCategories:liveCategories.length,vodCategories:vodCategoriesRaw.length,seriesCategories:seriesCategoriesRaw.length,liveStreams:streamsRaw.length,liveStreamEntries:streamsRaw.map(s=>({stream_id:s.stream_id,category_id:s.category_id,name:s.name,stream_icon:s.stream_icon,epg_channel_id:s.epg_channel_id})),categories:liveCategories,categoryGroups:{live:liveCategoriesRaw.map(c=>({id:String(c.category_id??''),name:String(c.category_name||'').trim()})).filter(c=>c.id&&c.name),vod:vodCategoriesRaw.map(c=>({id:String(c.category_id??''),name:String(c.category_name||'').trim()})).filter(c=>c.id&&c.name),series:seriesCategoriesRaw.map(c=>({id:String(c.category_id??''),name:String(c.category_name||'').trim()})).filter(c=>c.id&&c.name)},diagnostics,panelType,networkHint,rawLink:inputUrl,detectedMode:cfg.detectedMode,streamId:cfg.streamId}}
-    function hardResetResults(){categorySelections.clear();exportAccounts.clear();try{destroyTable()}catch(e){}const table=document.getElementById("sortTable");if(table){const tbody=table.querySelector("tbody");if(tbody)tbody.innerHTML=""}if(el.mobileResults)el.mobileResults.innerHTML="";el.statDetected.textContent="0";el.statOk.textContent="0";el.statError.textContent="0";el.statRows.textContent="0";el.logBox.textContent="Logs:\n";resetProgress();clearGeneratedUrl();showVpnAlert(false);el.logBox.classList.remove("show");el.btnToggleLogs.textContent="Ver info";logsExpanded=false}function forceClearAll(){currentRunId++;selectedGeneratedUrl="";selectedMeta=null;tableInstance=null;isRunning=false;if(el.contenido)el.contenido.value="";if(el.generatedGetUrl)el.generatedGetUrl.value="";hardResetResults();el.indicator.textContent="Esperando acción...";el.btnRun.disabled=false;setTimeout(()=>createTable(),0)}
-    async function runExtraction(){if(isRunning){setStatus("Ya hay un análisis en curso...");return}isRunning=true;el.btnRun.disabled=true;const runId=++currentRunId;try{hardResetResults();const rawText=el.contenido.value.trim();if(!rawText){setStatus("Pega contenido antes de ejecutar.");createTable();return}const urls=extractUrls(rawText),macPortals=extractMacPortalBlocks(rawText),totalDetected=urls.length+macPortals.length;el.statDetected.textContent=totalDetected;el.statOk.textContent="0";el.statError.textContent="0";log(`URLs Xtream detectadas: ${urls.length}`);log(`Portales MAC detectados: ${macPortals.length}`);if(!urls.length&&!macPortals.length){setStatus("No se detectaron URLs Xtream ni bloques Portal/MAC válidos.");createTable();return}let ok=0,error=0;for(const[idx,portal]of macPortals.entries()){if(runId!==currentRunId)return;addRow(portal,`mac-${idx+1}`);ok++;log(`OK Portal MAC: ${portal.host} | ${portal.username} | ${portal.liveStreams} canales`)}el.statOk.textContent=ok;el.statError.textContent=error;updateRowCount();if(urls.length){setStatus("Procesando enlaces Xtream...");setProgress(ok,totalDetected);const concurrency=window.innerWidth<768?3:6;let index=0;async function worker(){while(index<urls.length){if(runId!==currentRunId)return;const i=index++,current=urls[i],rowId=`row-${i+1}`;log(`Procesando ${i+1}/${urls.length}: ${current}`);try{const startedAt=Date.now(),result=await fetchAccountData(current);if(runId!==currentRunId)return;const ms=Date.now()-startedAt;addRow(result,rowId);ok++;log(`OK: ${result.host} | ${result.username} | modo=${result.detectedMode||"N/D"} | ${ms} ms`)}catch(err){if(runId!==currentRunId)return;const errorText=normalizeAxiosError(err);log(`ERROR: ${current} -> ${errorText}`);error++;showVpnAlert(true);showVpnAlert(true)}if(runId!==currentRunId)return;el.statOk.textContent=ok;el.statError.textContent=error;setProgress(ok+error,totalDetected);setStatus(`Procesando ${ok+error} de ${totalDetected}...${error>0?" | Prueba VPN ON/OFF":""}`)}}const workers=[];for(let i=0;i<concurrency;i++)workers.push(worker());await Promise.all(workers)}if(runId!==currentRunId)return;let vpnAdvice="";if(error>0){vpnAdvice=" | Prueba VPN ON/OFF"}showVpnAlert(error>0);setProgressDone();setStatus(`Finalizado. OK: ${ok} | Errores: ${error}${vpnAdvice}`);log(`Finalizado. OK=${ok}, Errores=${error}${vpnAdvice}`);try{createTable()}catch(e){log(`Aviso DataTable: ${e.message||e}`)}updateRowCount()}finally{if(runId===currentRunId){isRunning=false;el.btnRun.disabled=false}}}
-    function manualPasteFallback(){const text=window.prompt("Android ha bloqueado el portapapeles. Pega aquí el contenido y pulsa Aceptar:","");if(text!==null&&text.trim()){el.contenido.value=text;setStatus("Contenido pegado manualmente.")}else{el.contenido.focus();setStatus("Mantén pulsado dentro del recuadro y pega manualmente.")}}if(el.btnPaste){el.btnPaste.addEventListener("click",async()=>{try{if(navigator.clipboard&&window.isSecureContext){const text=await navigator.clipboard.readText();if(text&&text.trim()){el.contenido.value=text;setStatus("Contenido pegado.");return}}manualPasteFallback()}catch(e){manualPasteFallback()}})}el.btnRun.addEventListener("click",runExtraction);el.btnSaveTxt.addEventListener("click",saveGeneratedTxt);el.btnClearGenerated.addEventListener("click",()=>{clearGeneratedUrl();setStatus("URL generada limpiada.")});el.btnToggleLogs.addEventListener("click",()=>toggleLogs());window.addEventListener("beforeunload",()=>{try{sessionStorage.clear()}catch(e){}});createTable();window.exportSelectedVod=exportSelectedVod;window.exportSelectedLive=exportSelectedLive;window.setCategorySelection=setCategorySelection;window.selectCategoryGroup=selectCategoryGroup;window.toggleCategories=toggleCategories;window.toggleMobileCategories=toggleMobileCategories;window.generateGetForResult=generateGetForResult;window.forceClearAll=forceClearAll;
+    // Registrar únicamente información de diagnóstico sin mostrar contraseñas.
+    function safeErrorHost(rawUrl){
+      try{
+        const url=new URL(rawUrl);
+        return `${url.hostname}${url.port?":"+url.port:""}`;
+      }catch{return "URL no válida";}
+    }
+    function addFailedList(rawUrl,message){
+      const list=document.getElementById("venomErrorList"),count=document.getElementById("venomErrorCount");
+      if(!list||!count)return;
+      const empty=list.querySelector(".venom-errors-empty");
+      if(empty)empty.remove();
+      const item=document.createElement("div");
+      item.className="venom-error-item";
+      const title=document.createElement("strong"),detail=document.createElement("small");
+      title.textContent=safeErrorHost(rawUrl);
+      // Evitar contraseñas y enlaces completos también en mensajes de error.
+      detail.textContent=String(message||"Error desconocido").replace(/https?:\/\/[^\s]+/gi,"[URL ocultada]").slice(0,260);
+      item.append(title,detail);
+      list.appendChild(item);
+      count.textContent=String(list.children.length);
+    }
+    function resetFailedLists(){
+      const list=document.getElementById("venomErrorList"),count=document.getElementById("venomErrorCount");
+      if(list)list.innerHTML='<span class="venom-errors-empty">Sin errores detectados.</span>';
+      if(count)count.textContent="0";
+    }
+    function hardResetResults(){const globalInput=document.getElementById("venomGlobalQuery");if(globalInput)globalInput.value="";const globalResults=document.getElementById("venomGlobalResults");if(globalResults)globalResults.textContent="Analiza una cuenta para buscar.";resetFailedLists();categorySelections.clear();exportAccounts.clear();titlePickers.clear();try{destroyTable()}catch(e){}const table=document.getElementById("sortTable");if(table){const tbody=table.querySelector("tbody");if(tbody)tbody.innerHTML=""}if(el.mobileResults)el.mobileResults.innerHTML="";el.statDetected.textContent="0";el.statOk.textContent="0";el.statError.textContent="0";el.statRows.textContent="0";el.logBox.textContent="Logs:\n";resetProgress();clearGeneratedUrl();showVpnAlert(false);el.logBox.classList.remove("show");el.btnToggleLogs.textContent="Ver info";logsExpanded=false}function forceClearAll(){currentRunId++;selectedGeneratedUrl="";selectedMeta=null;tableInstance=null;isRunning=false;if(el.contenido)el.contenido.value="";if(el.generatedGetUrl)el.generatedGetUrl.value="";hardResetResults();el.indicator.textContent="Esperando acción...";el.btnRun.disabled=false;setTimeout(()=>createTable(),0)}
+    async function runExtraction(){if(isRunning){setStatus("Ya hay un análisis en curso...");return}isRunning=true;el.btnRun.disabled=true;const runId=++currentRunId;try{hardResetResults();const rawText=el.contenido.value.trim();if(!rawText){setStatus("Pega contenido antes de ejecutar.");createTable();return}const urls=extractUrls(rawText),macPortals=extractMacPortalBlocks(rawText),totalDetected=urls.length+macPortals.length;el.statDetected.textContent=totalDetected;el.statOk.textContent="0";el.statError.textContent="0";log(`URLs Xtream detectadas: ${urls.length}`);log(`Portales MAC detectados: ${macPortals.length}`);if(!urls.length&&!macPortals.length){setStatus("No se detectaron URLs Xtream ni bloques Portal/MAC válidos.");createTable();return}let ok=0,error=0;for(const[idx,portal]of macPortals.entries()){if(runId!==currentRunId)return;addRow(portal,`mac-${idx+1}`);ok++;log(`OK Portal MAC: ${portal.host} | ${portal.username} | ${portal.liveStreams} canales`)}el.statOk.textContent=ok;el.statError.textContent=error;updateRowCount();if(urls.length){setStatus("Procesando enlaces Xtream...");setProgress(ok,totalDetected);const concurrency=window.innerWidth<768?3:6;let index=0;async function worker(){while(index<urls.length){if(runId!==currentRunId)return;const i=index++,current=urls[i],rowId=`row-${i+1}`;log(`Procesando ${i+1}/${urls.length}: ${current}`);try{const startedAt=Date.now(),result=await fetchAccountData(current);if(runId!==currentRunId)return;const ms=Date.now()-startedAt;addRow(result,rowId);ok++;log(`OK: ${result.host} | ${result.username} | modo=${result.detectedMode||"N/D"} | ${ms} ms`)}catch(err){if(runId!==currentRunId)return;const errorText=normalizeAxiosError(err);log(`ERROR: ${current} -> ${errorText}`);addFailedList(current,errorText);error++;showVpnAlert(true);showVpnAlert(true)}if(runId!==currentRunId)return;el.statOk.textContent=ok;el.statError.textContent=error;setProgress(ok+error,totalDetected);setStatus(`Procesando ${ok+error} de ${totalDetected}...${error>0?" | Prueba VPN ON/OFF":""}`)}}const workers=[];for(let i=0;i<concurrency;i++)workers.push(worker());await Promise.all(workers)}if(runId!==currentRunId)return;let vpnAdvice="";if(error>0){vpnAdvice=" | Prueba VPN ON/OFF"}showVpnAlert(error>0);setProgressDone();setStatus(`Finalizado. OK: ${ok} | Errores: ${error}${vpnAdvice}`);log(`Finalizado. OK=${ok}, Errores=${error}${vpnAdvice}`);try{createTable()}catch(e){log(`Aviso DataTable: ${e.message||e}`)}updateRowCount()}finally{if(runId===currentRunId){isRunning=false;el.btnRun.disabled=false}}}
+    function manualPasteFallback(){const text=window.prompt("Android ha bloqueado el portapapeles. Pega aquí el contenido y pulsa Aceptar:","");if(text!==null&&text.trim()){el.contenido.value=text;setStatus("Contenido pegado manualmente.")}else{el.contenido.focus();setStatus("Mantén pulsado dentro del recuadro y pega manualmente.")}}if(el.btnPaste){el.btnPaste.addEventListener("click",async()=>{try{if(navigator.clipboard&&window.isSecureContext){const text=await navigator.clipboard.readText();if(text&&text.trim()){el.contenido.value=text;setStatus("Contenido pegado.");return}}manualPasteFallback()}catch(e){manualPasteFallback()}})}el.btnRun.addEventListener("click",runExtraction);el.btnSaveTxt.addEventListener("click",saveGeneratedTxt);el.btnClearGenerated.addEventListener("click",()=>{clearGeneratedUrl();setStatus("URL generada limpiada.")});el.btnToggleLogs.addEventListener("click",()=>toggleLogs());window.addEventListener("beforeunload",()=>{try{sessionStorage.clear()}catch(e){}});createTable();window.venomGlobalSearch=venomGlobalSearch;window.resetAndReloadTitles=resetAndReloadTitles;window.loadIndividualTitles=loadIndividualTitles;window.toggleSelectedTitle=toggleSelectedTitle;window.filterTitles=filterTitles;window.downloadUnifiedSelection=downloadUnifiedSelection;window.downloadChosenTitles=downloadChosenTitles;window.exportSelectedSeries=exportSelectedSeries;window.exportSelectedVod=exportSelectedVod;window.exportSelectedLive=exportSelectedLive;window.setCategorySelection=setCategorySelection;window.selectCategoryGroup=selectCategoryGroup;window.toggleCategories=toggleCategories;window.toggleMobileCategories=toggleMobileCategories;window.generateGetForResult=generateGetForResult;window.forceClearAll=forceClearAll;
   </script>
 </body>
 </html>
