@@ -1,343 +1,212 @@
-## Venom IPTV Panel
+<div align="center">
 
-Venom IPTV Panel is a lightweight local web tool for analyzing IPTV links based on Xtream Codes / Xtream API style servers.
+# VENOM IPTV Panel
 
-It extracts credentials from IPTV URLs, queries the server API, generates a ready-to-use get.php playlist URL, and displays useful diagnostics such as account status, expiration date, categories, live channels, panel type, detected mode, stream ID, access behavior, and network advice.
+**Local Xtream API analyzer · Category explorer · M3U playlist exporter**
 
-The project is designed to run locally in the browser.
+**Analyze authorized Xtream IPTV accounts, explore content categories, select titles, and generate tailored `.m3u` playlists from a single browser-based interface.**
+
+[Features](#features) · [Quick start](#quick-start) · [Workflow](#typical-workflow) · [Privacy](#privacy--security) · [Limitations](#limitations)
+
+</div>
 
 ---
 
 ## Overview
 
-Venom IPTV Panel helps inspect IPTV-style links and determine:
+VENOM IPTV Panel is a lightweight, local-first web application for inspecting IPTV-style URLs and Xtream-compatible account responses. It extracts account details from supported URL patterns, queries the Xtream `player_api.php` endpoint, shows diagnostic information, and helps organize channels, movies, and series into customized M3U playlists.
 
-- whether the panel is responding correctly
-- which type of panel is being detected
-- which credentials were extracted
-- whether the server is returning categories and live streams
-- whether access may depend on network, VPN, or IP behavior
+The interface is written in Spanish and adapts to both desktop and mobile screens. **No application backend is required**; supported data requests are made by the browser to the IPTV server being inspected.
 
-The interface is optimized for both:
+> [!IMPORTANT]
+> Only use accounts and services you own or have permission to access. The tool does not supply IPTV content, subscriptions, credentials, or streaming servers.
 
-- Desktop → full table layout
-- Mobile → compact card layout
+## Features
 
----
+| Area | Capabilities |
+| --- | --- |
+| **URL parsing** | Detects `get.php`, `player_api.php`, `/live/`, `/movie/`, `/series/`, short credential routes, and other recognized URL styles. |
+| **Account diagnostics** | Shows account state, expiration, maximum/active/free connections, panel type, route detection, stream ID, and network-related hints. |
+| **Category explorer** | Displays selectable **Live TV**, **Movies (VOD)**, and **Series** categories for each compatible Xtream account. |
+| **Individual title selection** | Loads titles from selected movie/series categories and lets you choose individual movies or series. |
+| **Global search** | Searches analyzed channels and **already-loaded** movie and series catalogs. |
+| **Unified M3U export** | One export action can combine selected channels, movies, and series episodes into a single `.m3u` file **per account**. |
+| **Playlist URL generator** | Creates a `get.php` URL for a recognized Xtream account, with an option to save it as a `.txt` file. |
+| **Progress & errors** | Shows catalog-loading feedback, export progress for series-episode lookups, and a separate list of failed account checks. |
+| **Responsive UI** | Desktop table, mobile cards, expandable category sections, color-coded selection, and a bottom **Hide content** action. |
+| **Batch processing** | Analyzes multiple supported links with concurrency adjusted for mobile or desktop. |
+
+### Unified export: what is downloaded?
+
+The button **`Descargar contenido seleccionado`** generates a local **M3U playlist file containing stream URLs**. It does **not** download the actual video files.
+
+- Selecting Live TV categories includes matching channels.
+- Selecting VOD categories includes their movie entries; when individual movies have been selected, those individual movie selections take priority for VOD.
+- Selecting Series categories includes available episodes; when individual series have been selected, those selections take priority for Series.
+- Selecting more than one content type can produce **one combined playlist** for the current Xtream account.
+- If no category or title is selected, the export does not proceed.
+
+**Note:** Movie and series data requires API requests. The amount of content generated depends on the server response, and the resulting URLs may still require valid account access to play.
+
+### Search and category selection
+
+The **global search** indexes the data the panel has already retrieved; it does **not** search a provider's entire uncached catalog. To find a movie or series, select its category and click **`Cargar películas y series`** first.
+
+Use **`Limpiar y volver a cargar`** to clear previous titles and load the currently selected categories. If none are selected, the catalog stays empty. Use **`Ocultar contenido`** to collapse an expanded details panel without scrolling back to its top.
+
+### Diagnostics and error reporting
+
+The panel provides indicators for:
+
+- Xtream API/account availability and expiration
+- Live, VOD, and Series category counts
+- Live-stream count and connection limits
+- HTTP/API failures and CORS-related conditions
+- Possible reverse-proxy, web-server, or Cloudflare signals
+- Network/IP/VPN troubleshooting suggestions
+
+These indicators are **heuristics**, not proof of a specific restriction. In particular, VENOM does **not** detect whether your VPN is currently connected.
+
+### Supported source formats
+
+Examples with placeholders (not working credentials):
 
-## Main Features
+```text
+http://example.com:8080/get.php?username=USER&password=PASS&type=m3u_plus&output=ts
+http://example.com:8080/player_api.php?username=USER&password=PASS
+http://example.com:8080/live/USER/PASS/12345.ts
+http://example.com:8080/movie/USER/PASS/67890.mp4
+http://example.com:8080/series/USER/PASS/24680.mp4
+http://example.com:8080/USER/PASS/12345
+```
 
-### IPTV URL Detection
+The parser also recognizes some M3U/token-style URLs for classification. **Recognizing a format does not guarantee that it contains extractable Xtream credentials or can be queried through `player_api.php`.**
 
-The panel can detect and normalize multiple IPTV link formats, including:
+### Portal MAC information
+
+The panel can parse supplied **Portal/MAC information blocks** and display their provided details alongside Xtream results. This is an **information display**, not a general Portal MAC authorization, authentication, or playlist-export client. `get.php` generation is not available for these entries.
 
-- get.php
-- player_api.php
-- /live/user/pass/id
-- /movie/user/pass/id
-- /series/user/pass/id
-- short route patterns like /user/pass/id
-- M3U / M3U8 links
-- tokenized links
+## Quick start
 
----
+**Requirements:** a modern desktop/mobile browser, internet access for external frontend libraries and remote API requests, and a permitted Xtream account for live analysis.
 
-### Automatic get.php Generator
+1. Clone the repository or download its files.
+2. Open `index.html` in your browser.
+3. Paste one or more supported URLs or Portal/MAC information blocks.
+4. Click **`Obtener info`** to start analysis.
+5. Expand **`Ver detalles`** and choose the content categories you want.
+6. Optionally load movie and series titles, select individual items, or use the global search.
+7. Click **`Descargar contenido seleccionado`** to generate a custom M3U playlist.
 
-Each detected result includes a Generate get.php button.
+```bash
+# Clone the project
+git clone https://github.com/Venon33/venom-iptv-panel.git
+cd venom-iptv-panel
 
-The generated playlist URL follows this structure:
+# Open index.html in your preferred browser.
+```
 
-get.php?username=USER&password=PASS&type=m3u_plus&output=ts
-The final URL appears in the upper panel and can be saved as a .txt file.
+> [!NOTE]
+> Opening the page directly via `file://` is supported for the local interface, but some browsers and IPTV servers restrict cross-origin API requests. If calls fail, check the browser console and the server's CORS behavior. Running a local HTTP server does not bypass a remote server's CORS policy.
 
----
+## Typical workflow
 
-### Xtream API Analysis
-
-The panel queries the server through:
-
-player_api.php
-and extracts:
-
-- account status
-- expiration date
-- max connections
-- active connections
-- free connections
-- TV categories
-- movie categories
-- series categories
-- live channel count
-
----
-
-### Panel Type Detection
-
-The tool attempts to classify the IPTV source automatically.
-
-| Type | Description |
-|------|-------------|
-| Xtream API | Standard Xtream API endpoint |
-| Xtream route | /live/user/pass/... style URL |
-| M3U simple | Static playlist |
-| M3U with token | Token-protected playlist |
-| Unknown | Not clearly identified |
-
----
-
-### Detected Route Mode
-
-The parser also identifies how credentials were extracted from the original URL.
-
-Possible detected modes include:
-
-- get_php
-- player_api
-- query_credentials
-- live_route
-- movie_route
-- series_route
-- short_route
-- unknown
-
-This makes it easier to understand how the panel interpreted the input.
-
----
-
-### Stream ID Detection
-
-If the original link contains a stream identifier, the panel displays it as Stream ID.
-
-This is especially useful for links such as:
-
-http://host:port/user/pass/12345
-or:
-
-http://host:port/live/user/pass/12345.ts
----
-
-### Diagnostics
-
-The panel provides visual diagnostics for:
-
-- direct access / CORS behavior
-- reverse proxy / web server hints
-- Cloudflare detection
-- live channel count health
-- possible IP / network restrictions
-- access consistency
-
----
-
-### Network Advice
-
-The panel includes a Network Advice indicator to help interpret cases where access may differ between devices or networks.
-
-Examples of advice shown:
-
-- No clear signs
-- Try without VPN or change network
-- Possible restriction by IP or location
-- Try another network or disable VPN
-
-This does not directly detect whether a VPN is active.  
-Instead, it infers network-related issues based on panel behavior and response patterns.
-
----
-
-### Parallel Processing
-
-Multiple IPTV links are analyzed in parallel for better performance.
-
-The panel automatically adjusts request concurrency depending on the device:
-
-| Device | Parallel requests |
-|--------|-------------------|
-| Mobile | 3 |
-| Desktop | 6 |
-
-This makes batch analysis much faster.
-
----
-
-### Mobile-Friendly Interface
-
-The interface automatically switches between:
-
-- Desktop table layout
-- Mobile card layout
-
-Mobile layout includes:
-[6/4/26 12:37] Notas: - compact diagnostics
-- per-card actions
-- expandable categories
-- simplified visual status indicators
-
----
-
-### Clean Re-run Logic
-
-The panel includes a hardened reset flow to reduce stale state between runs.
-
-This improves reliability when:
-
-- clearing results
-- re-running analysis several times
-- testing multiple IPTV entries in sequence
-- aborting previous runs and starting again
-
----
-
-## Visual Status Guide
-
-The panel uses compact colored indicators:
-
-- ✔ Green → normal / good
-- ⚠ Yellow → warning / partial response
-- ✖ Red → error / blocked / missing data
-
-These colors are used in diagnostics such as:
-
-- panel type
-- access behavior
-- protection
-- channel count
-- network restriction hints
-
----
-
-## How to Use
-
-1. Open index.html in your browser.
-2. Paste one or more IPTV links into the input box.
-3. Click Obtener info.
-4. Review the results in the table or mobile cards.
-5. Click Generar get.php on any result if needed.
-
-### Example Input
-
-http://example.com:8080/live/user/pass/12345.ts
----
-
-## Buttons
-
-### Obtener info
-Starts the IPTV analysis process.
-
-### Borrar
-Clears all results, counters, generated URLs, and logs.
-
-### Pegar
-Attempts to paste clipboard content into the input box.
-
-### Guardar .txt
-Saves the generated get.php URL as a text file.
-
-### Ver info
-Shows internal logs only when needed.
-
----
-
-## Example Workflow
-
-1. Paste one or multiple IPTV links.
-2. Run the analysis.
-3. Review:
-   - account status
-   - expiration
-   - categories
-   - live channel count
-   - panel type
-   - detected mode
-   - stream ID
-   - network advice
-4. Generate get.php from a valid result.
-5. Save it as .txt if required.
-
----
-
-## Project Structure
-
-.
-├── index.html
-└── README.md
----
-
-## Recommended Usage
-
-For best results:
-
-- run the panel locally
-- use a modern browser
-- paste complete IPTV URLs when possible
-- avoid running multiple scans manually at the same time
-- if mobile behavior differs from desktop, test another browser or network
-
----
-
-## Notes
-
-Some IPTV servers may behave differently depending on:
-
-- IP address
-- VPN usage
-- ASN / ISP
-- geographic region
-- proxy / firewall rules
-- browser security restrictions
-- DNS resolution differences between devices
-
-Because of that, some panels may:
-
-- fully respond
-- partially respond
-- block category or stream queries
-- return inconsistent results depending on network conditions
-
----
-
-## Clipboard Notes
-
-On some mobile browsers, clipboard access may be restricted.
-
-If the Paste button cannot access the clipboard, use manual paste instead.
-
----
-
-## Privacy
-
-All analysis is performed locally in your browser.
-
-The tool does not send data to any external server of its own.
-
-Requests are made directly from the browser to the IPTV source being analyzed.
-
----
-
-## Technologies Used
-
-- HTML
-- CSS
-- JavaScript
-- Axios
-- Bootstrap
-- DataTables
-
-No backend or installation is required.
-
----
-
-## Disclaimer
-
-This project is provided for educational, diagnostic, and testing purposes only.
-
-The author is not responsible for misuse of this tool or unauthorized access to IPTV services.
-
-Use it only with systems and accounts you are authorized to inspect.
-
----
+```text
+Paste URLs / Portal-MAC details
+             │
+             ▼
+      Obtener info
+             │
+             ▼
+  Review account diagnostics
+             │
+             ▼
+       Ver detalles
+             │
+       ┌─────┼──────┐
+       ▼     ▼      ▼
+     Live   VOD   Series
+       └─────┼──────┘
+             ▼
+  Select categories / titles
+             │
+             ▼
+  Descargar contenido seleccionado
+             │
+             ▼
+       Custom .m3u file
+```
+
+## Main controls
+
+| UI label | Purpose |
+| --- | --- |
+| `Obtener info` | Analyze supported accounts/links. |
+| `Borrar` | Reset the current analysis, results, counters, and related UI state. |
+| `Pegar` | Attempt to paste clipboard content. |
+| `Generar get.php` | Build a `get.php` playlist URL from a supported Xtream account. |
+| `Guardar .txt` | Save the generated URL as a text file. |
+| `Ver detalles` | Expand account/category information. |
+| `Cargar películas y series` | Fetch titles in the selected VOD/Series categories. |
+| `Limpiar y volver a cargar` | Replace previously loaded title results using the current category selection. |
+| `Descargar contenido seleccionado` | Export the selected content into an `.m3u` playlist. |
+| `Ocultar contenido` | Collapse the expanded account details. |
+| `Ver info` | Show additional diagnostic logs. |
+
+## Responsive interface
+
+VENOM uses a full table for desktop screens and compact cards for mobile devices. Selected categories and titles receive stronger visual emphasis so they are easier to distinguish. The panel includes color-coded state indicators:
+
+- **Green:** normal / available
+- **Amber:** warning / partial or uncertain condition
+- **Red:** error / unavailable
+
+Batch analysis currently uses up to **6 concurrent workers on desktop** and **3 on mobile**, based on viewport width. Actual speed depends on the remote servers.
+
+## Screenshots
+
+You can add your own screenshots of the running panel here later. Before publishing, make sure images do not reveal real account credentials, access URLs, MAC addresses, or private server identifiers.
+
+## Project structure
+
+```text
+venom-iptv-panel/
+├── index.html              # Browser UI, parsing, API access and M3U export
+└── README.md               # This documentation
+```
+
+No application build process or custom backend is needed. Frontend libraries are currently loaded from external CDNs.
+
+## Privacy & security
+
+- The application has **no custom data-collection backend**. API requests go from your browser to the remote IPTV endpoints you choose.
+- It also loads third-party frontend assets from CDNs; therefore, **"local-first" does not mean fully offline or network-isolated**.
+- **IPTV URLs and exported `.m3u` files can contain usernames and passwords.** Handle them as sensitive files; do not upload them to public issue reports or repositories.
+- Diagnostic logs may include the original URL and extracted credentials. Avoid publishing logs or screenshots without reviewing and redacting them.
+- Browser extensions, browser history, remote servers, local downloads, and third-party networks can have their own security/privacy implications.
+
+## Limitations
+
+- Server responses vary across Xtream-compatible implementations.
+- Browser CORS rules, HTTPS mixed-content restrictions, firewalls, VPNs, or provider controls can prevent API requests.
+- A displayed category or stream does not guarantee that playback will succeed.
+- Global search only covers data that was **already loaded** in the current session.
+- Large category selections and series exports may generate multiple network requests and take time.
+- The export button downloads **playlist files**, not full media files.
+- Portal MAC information entries do not have the same API/export capabilities as Xtream accounts.
+
+## Tech stack
+
+**HTML5 · CSS3 · Vanilla JavaScript · Axios · Bootstrap 4 · jQuery/DataTables**
+
+## Responsible use
+
+This project is intended for legitimate administration, diagnostics, interoperability testing, and management of **services and accounts you are authorized to access**. No channels, movies, accounts, or access rights are included. Respect provider terms, copyright, and applicable law.
 
 ## Author
 
-Developed by Venom
+Developed by **Venom**.
+
+---
+
+<div align="center"><sub>VENOM IPTV Panel · Browser-based Xtream analysis and M3U playlist management</sub></div>
